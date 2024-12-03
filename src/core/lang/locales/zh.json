@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "title": "My Luminous - 照片画廊",
+        "description": "立即下载并分享您的回忆",
+        "keywords": "照片亭, 照片, 画廊, 回忆, 活动, 照片分享",
+        "ogDescription": "查找并下载您在我们的照片亭中拍摄的照片"
+    },
+    "gallery": {
+        "photoCount": "图库中的照片",
+        "photosCount": "图库中的照片",
+        "error": "加载错误",
+        "buttons": {
+            "download": "下载照片",
+            "downloadAll": "下载所有",
+            "downloading": "正在下载...",
+            "preparing": "正在准备...",
+            "preparingCount": "准备中 {count}/{total}",
+            "creatingZip": "正在创建ZIP...",
+            "downloadComplete": "下载完成"
+        },
+        "toast": {
+            "photoDownloaded": "照片已下载",
+            "photosDownloaded": "照片已下载",
+            "downloadError": "下载错误",
+            "downloadAllError": "下载时出错"
+        }
+    },
+    "notFound": {
+        "title": "页面未找到",
+        "message": "您寻找的页面未找到",
+        "backLink": "返回首页 ›",
+        "footer": {
+            "copyright": "版权 © 2024 My Luminous。版权所有。"
+        }
+    }
+}

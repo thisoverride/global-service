@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "title": "My Luminous - Galerie Photos",
+    "description": "Téléchargez et partagez vos souvenirs instantanément",
+    "keywords": "borne photo, photos, galerie, souvenirs, événement, partage de photos",
+    "ogDescription": "Retrouvez et téléchargez vos photos prises dans notre borne photo"
+  },
+  "gallery": {
+    "photoCount": "Photo dans la galerie",
+    "photosCount": "Photos dans la galerie",
+    "error": "Erreur du chargement",
+    "buttons": {
+      "download": "Télécharger la photo",
+      "downloadAll": "Tout télécharger",
+      "downloading": "Téléchargement...",
+      "preparing": "Préparation...",
+      "preparingCount": "Préparation {count}/{total}",
+      "creatingZip": "Création du ZIP...",
+      "downloadComplete": "Téléchargement terminé"
+    },
+    "toast": {
+      "photoDownloaded": "Photo téléchargée",
+      "photosDownloaded": "Photos téléchargées",
+      "downloadError": "Erreur de téléchargement",
+      "downloadAllError": "Erreur lors du téléchargement"
+    }
+  },
+  "notFound": {
+    "title": "Page non trouvée",
+    "message": "La page que vous recherchez n'a pas été trouvée",
+    "backLink": "Retourner à l'accueil ›",
+    "footer": {
+      "copyright": "Copyright © 2024 My Luminous. Tous droits réservés."
+    }
+  }
+}

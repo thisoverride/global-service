@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "title": "ماي لومينوس - معرض الصور",
+        "description": "قم بتنزيل ومشاركة ذكرياتك على الفور",
+        "keywords": "كشك الصور, الصور, المعرض, الذكريات, الحدث, مشاركة الصور",
+        "ogDescription": "ابحث عن صورك التي التقطتها في كشك الصور الخاص بنا وقم بتنزيلها"
+    },
+    "gallery": {
+        "photoCount": "صورة في المعرض",
+        "photosCount": "صور في المعرض",
+        "error": "خطأ في التحميل",
+        "buttons": {
+            "download": "تحميل الصورة",
+            "downloadAll": "تحميل الكل",
+            "downloading": "جارٍ التنزيل...",
+            "preparing": "جارٍ التحضير...",
+            "preparingCount": "جارٍ التحضير {count}/{total}",
+            "creatingZip": "جارٍ إنشاء ملف ZIP...",
+            "downloadComplete": "اكتمل التنزيل"
+        },
+        "toast": {
+            "photoDownloaded": "تم تحميل الصورة",
+            "photosDownloaded": "تم تحميل الصور",
+            "downloadError": "خطأ في التنزيل",
+            "downloadAllError": "خطأ أثناء التنزيل"
+        }
+    },
+    "notFound": {
+        "title": "الصفحة غير موجودة",
+        "message": "الصفحة التي تبحث عنها غير موجودة",
+        "backLink": "العودة إلى الصفحة الرئيسية ›",
+        "footer": {
+            "copyright": "حقوق الطبع والنشر © 2024 ماي لومينوس. جميع الحقوق محفوظة."
+        }
+    }
+}

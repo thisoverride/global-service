@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "title": "My Luminous - Galleria Fotografica",
+        "description": "Scarica e condividi i tuoi ricordi istantaneamente",
+        "keywords": "cabina fotografica, foto, galleria, ricordi, evento, condivisione foto",
+        "ogDescription": "Trova e scarica le tue foto scattate nella nostra cabina fotografica"
+    },
+    "gallery": {
+        "photoCount": "Foto nella galleria",
+        "photosCount": "Foto nella galleria",
+        "error": "Errore di caricamento",
+        "buttons": {
+            "download": "Scarica foto",
+            "downloadAll": "Scarica tutto",
+            "downloading": "Scaricamento in corso...",
+            "preparing": "Preparazione in corso...",
+            "preparingCount": "Preparazione {count}/{total}",
+            "creatingZip": "Creazione ZIP...",
+            "downloadComplete": "Scaricamento completato"
+        },
+        "toast": {
+            "photoDownloaded": "Foto scaricata",
+            "photosDownloaded": "Foto scaricate",
+            "downloadError": "Errore di scaricamento",
+            "downloadAllError": "Errore durante il scaricamento"
+        }
+    },
+    "notFound": {
+        "title": "Pagina non trovata",
+        "message": "La pagina che stai cercando non è stata trovata",
+        "backLink": "Torna alla home ›",
+        "footer": {
+            "copyright": "Copyright © 2024 My Luminous. Tutti i diritti riservati."
+        }
+    }
+}

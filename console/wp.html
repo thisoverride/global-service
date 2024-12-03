@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --aws-blue: #232f3e;
+            --aws-orange: #ff9900;
+            --border-color: #e0e0e0;
+            --bg-light: #f8f9fa;
+            --success-color: #1e8e3e;
+            --warning-color: #f9ab00;
+            --danger-color: #d93025;
+        }
+
+        .docker-section {
+            padding: 24px;
+        }
+
+        /* Onglets */
+        .tabs-container {
+            margin-bottom: 24px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 2px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-button:hover {
+            color: var(--aws-blue);
+        }
+
+        .tab-button.active {
+            color: var(--aws-orange);
+            border-bottom-color: var(--aws-orange);
+        }
+
+        /* Cartes */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Formulaires */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--aws-orange);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 153, 0, 0.2);
+        }
+
+        /* Boutons */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--aws-orange);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Console */
+        .console {
+            background: var(--aws-blue);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            color: white;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .console-output {
+            background: #1a242f;
+            border-radius: 4px;
+            padding: 16px;
+            color: #a7b6c2;
+            font-family: monospace;
+            height: 200px;
+            overflow-y: auto;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="docker-section">
+        <!-- Onglets -->
+        <div class="tabs-container">
+            <nav class="nav-tabs">
+                <button class="tab-button active">
+                    <i class="fas fa-cube"></i>
+                    Template Builder
+                </button>
+                <button class="tab-button">
+                    <i class="fas fa-cogs"></i>
+                    Docker Actions
+                </button>
+            </nav>
+        </div>
+
+        <!-- Template Builder -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-cube"></i>
+                <h2 class="card-title">Build Docker Template</h2>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Language</label>
+                            <select class="form-control">
+                                <option value="">Select language</option>
+                                <option value="php">PHP</option>
+                                <option value="node">Node.js</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Directory Name</label>
+                            <input type="text" class="form-control" value="mon_projet_exemple">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">WordPress Version</label>
+                            <select class="form-control">
+                                <option value="">Select version</option>
+                                <option value="6.0">WordPress 6.0</option>
+                                <option value="5.9">WordPress 5.9</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">MySQL Configuration</label>
+                            <input type="text" class="form-control" placeholder="MySQL User">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">MySQL Password</label>
+                            <input type="password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">MySQL Port</label>
+                            <input type="number" class="form-control" value="3306">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Addons (JSON format)</label>
+                        <textarea class="form-control" rows="4" placeholder="[{&quot;name&quot;: &quot;plugin-name&quot;, &quot;slug&quot;: &quot;plugin-slug&quot;}]"></textarea>
+                    </div>
+
+                    <div style="text-align: right;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Create Template
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Docker Actions -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-cogs"></i>
+                <h2 class="card-title">Container Actions</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Container ID</label>
+                        <input type="text" class="form-control" placeholder="Enter container ID">
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-success">
+                            <i class="fas fa-play"></i>
+                            Start
+                        </button>
+                        <button class="btn btn-warning">
+                            <i class="fas fa-stop"></i>
+                            Stop
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                            Remove
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Compose App Name</label>
+                    <input type="text" class="form-control" value="mon_projet_exemple">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-hammer"></i>
+                        Build App
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-boxes"></i>
+                        Get Containers
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-image"></i>
+                        Get Images
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Console -->
+        <div class="console">
+            <div class="console-header">
+                <i class="fas fa-terminal"></i>
+                <h3>Console Output</h3>
+            </div>
+            <pre class="console-output">> Docker Management Console initialized...</pre>
+        </div>
+    </section>
+</body>
+</html>

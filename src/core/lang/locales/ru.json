@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "title": "My Luminous - Фотогалерея",
+        "description": "Скачивайте и делитесь своими воспоминаниями мгновенно",
+        "keywords": "фотобудка, фото, галерея, воспоминания, мероприятие, обмен фотографиями",
+        "ogDescription": "Найдите и скачайте свои фотографии, сделанные в нашей фотобудке"
+    },
+    "gallery": {
+        "photoCount": "Фото в галерее",
+        "photosCount": "Фотографии в галерее",
+        "error": "Ошибка загрузки",
+        "buttons": {
+            "download": "Скачать фото",
+            "downloadAll": "Скачать всё",
+            "downloading": "Загрузка...",
+            "preparing": "Подготовка...",
+            "preparingCount": "Подготовка {count}/{total}",
+            "creatingZip": "Создание ZIP...",
+            "downloadComplete": "Загрузка завершена"
+        },
+        "toast": {
+            "photoDownloaded": "Фото скачано",
+            "photosDownloaded": "Фотографии скачаны",
+            "downloadError": "Ошибка загрузки",
+            "downloadAllError": "Ошибка при загрузке"
+        }
+    },
+    "notFound": {
+        "title": "Страница не найдена",
+        "message": "Страница, которую вы ищете, не найдена",
+        "backLink": "Вернуться на главную ›",
+        "footer": {
+            "copyright": "Авторские права © 2024 My Luminous. Все права защищены."
+        }
+    }
+}

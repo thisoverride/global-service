@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="<%= local %>">
+<head>
+  <meta charset="utf-8">
+  <title><%- meta.title %></title>
+
+  <!-- Meta tags de base -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="<%= meta.description %>">
+  <meta name="keywords" content="<%= meta.keywords %>">
+
+  <!-- Open Graph meta tags pour les réseaux sociaux -->
+  <meta property="og:title" content="<%= meta.title %>">
+  <meta property="og:description" content="<%= meta.ogDescription %>">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<%#= websiteUrl %>">
+  <meta property="og:image" content="/assets/img/smile-engine.png">
+  
+  <!-- Twitter Card meta tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%- meta.title %>">
+  <meta name="twitter:description" content="<%- meta.ogDescription %>">
+  <meta name="twitter:image" content="/assets/images/preview.jpg">
+
+  <!-- Meta tags additionnels -->
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Liens vers les ressources -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  
+  <!-- Préchargement des ressources importantes -->
+  <link rel="preload" href="/assets/css/style.css" as="style">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo" aria-label="Smile Engine Logo">
+        <svg class="smile-logo" viewBox="0 0 200 200"  fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(100 100) rotate(45)">
+            <circle cx="0" cy="-50" r="50" fill="#40E0D0"/>
+            <circle cx="50" cy="0" r="50" fill="#40E0D0"/>
+            <circle cx="0" cy="50" r="50" fill="#40E0D0"/>
+            <circle cx="-50" cy="0" r="50" fill="#40E0D0"/>
+          </g>
+        </svg>
+      </div>
+      <h1>Luminous Smile</h1>
+    </div>
+  </header>
+  <main>
+    <div class="content-wrapper">
+      <div class="gallery-section">
+        <% if (success) { %>
+          <h2><%= count %> <%= count === 1 ? gallery.photoCount : gallery.photosCount %></h2>
+        <% } else { %>
+          <h2><%= gallery.error %></h2>
+        <% } %>
+        <div class="gallery">
+          <swiper-container effect="cards" grab-cursor="true" aria-label="Galerie photo" id="mySwiper">
+            <% userPhotos.forEach(photo => { %>
+              <swiper-slide data-path="<%= photo %>" style="background-image: url('<%= photo %>')">
+              </swiper-slide>
+            <% }) %>
+          </swiper-container>
+        </div>
+      </div>
+      <div hidden style="display: none;">
+        <div id="translations" hidden
+        data-downloading="<%= gallery.buttons.downloading %>"
+        data-preparing="<%= gallery.buttons.preparing %>"
+        data-preparing-count="<%= gallery.buttons.preparingCount %>"
+        data-creating-zip="<%= gallery.buttons.creatingZip %>"
+        data-download-complete="<%= gallery.buttons.downloadComplete %>"
+        data-photo-downloaded="<%= gallery.toast.photoDownloaded %>"
+        data-photos-downloaded="<%= gallery.toast.photosDownloaded %>"
+        data-download-error="<%= gallery.toast.downloadError %>"
+        data-download-all-error="<%= gallery.toast.downloadAllError %>">
+    </div>
+      </div>
+      <% if (success) { %>       
+        <div class="buttons">
+          <button type="button" id="downloadBtn">
+            <div class="progress-bar"></div>
+            <span class="progress-text"><%= gallery.buttons.download %></span>
+          </button>
+          <button type="button" id="downloadAllBtn" class="secondary">
+            <div class="progress-bar"></div>
+            <span class="progress-text"><%= gallery.buttons.downloadAll %></span>
+          </button>
+        </div>
+      <% } %>
+    </div>
+    <div id="toast" class="toast"></div>
+  </main>
+  <script href="/assets/js/main.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

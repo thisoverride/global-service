@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Console de Gestion des Emails</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Navigation principale -->
+  <nav class="top-nav">
+    <div class="top-nav-left">
+      <div class="logo">
+        <i class="fab fa-aws"></i>
+      </div>
+      <button class="services-button" id="servicesButton">
+        <i class="fas fa-th"></i>
+        Services
+        <i class="fas fa-caret-down"></i>
+      </button>
+    </div>
+    <div class="top-nav-right">
+      <i class="fas fa-bell"></i>
+      <i class="fas fa-user-circle"></i>
+      <span>Admin</span>
+    </div>
+  </nav>
+
+  <!-- Panneau des services -->
+  <div class="services-panel" id="servicesPanel">
+    <div class="services-search">
+      <input type="text" class="search-input" placeholder="Rechercher un service..." id="serviceSearch">
+    </div>
+    <div class="services-grid">
+      <!-- Email & Communication -->
+      <div class="service-category">
+        <h3>Email & Communication</h3>
+        <div class="service-list">
+          <a href="#" class="nav-item">
+            <i class="fas fa-envelope"></i>
+            <span>Email Service</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-paper-plane"></i>
+            <span>Campaign Manager</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Sécurité -->
+      <div class="service-category">
+        <h3>Sécurité</h3>
+        <div class="service-list">
+          <a href="#" class="nav-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Gestion des accès</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-key"></i>
+            <span>Clés API</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Surveillance -->
+      <div class="service-category">
+        <h3>Surveillance</h3>
+        <div class="service-list">
+          <a href="#" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Métriques</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>Logs</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar principale -->
+  <aside class="sidebar">
+
+  </aside>
+
+  <!-- Contenu principal -->
+  <main class="main-content">
+    <%- body %>
+  </main>
+  <!-- Suite du code précédent -->
+
+  <script src="./index.js"></script>
+</body>
+
+</html>

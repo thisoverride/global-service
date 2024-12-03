@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "title": "My Luminous - Photo Gallery",
+        "description": "Download and share your memories instantly",
+        "keywords": "photo booth, photos, gallery, memories, event, photo sharing",
+        "ogDescription": "Find and download your photos taken in our photo booth"
+    },
+    "gallery": {
+        "photoCount": "Photo in the gallery",
+        "photosCount": "Photos in the gallery",
+        "error": "Loading error",
+        "buttons": {
+            "download": "Download photo",
+            "downloadAll": "Download all",
+            "downloading": "Downloading...",
+            "preparing": "Preparing...",
+            "preparingCount": "Preparing {count}/{total}",
+            "creatingZip": "Creating ZIP...",
+            "downloadComplete": "Download complete"
+        },
+        "toast": {
+            "photoDownloaded": "Photo downloaded",
+            "photosDownloaded": "Photos downloaded",
+            "downloadError": "Download error",
+            "downloadAllError": "Error during download"
+        }
+    },
+    "notFound": {
+        "title": "Page not found",
+        "message": "The page you are looking for was not found",
+        "backLink": "Return to home ›",
+        "footer": {
+            "copyright": "Copyright © 2024 My Luminous. All rights reserved."
+        }
+    }
+}
