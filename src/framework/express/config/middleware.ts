@@ -2,7 +2,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import express, { Application } from 'express';
 import path from 'path';
-import * as expressLayouts from 'express-ejs-layouts';
+import expressLayouts from 'express-ejs-layouts';
 
 export const configureMiddleware = (app: Application): void => {
   // Configuration des limites et du parsing
