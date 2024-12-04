@@ -4,7 +4,8 @@ import HotSpring from './hotspring/core/HotSpring';
 import { configureMiddleware } from './config/middleware';
 import { configureErrorHandling } from './config/errorHandling';
 import StorageService from '../../service/StorageService';
-import StorageController from '../../controller/StorageController';
+import ConsoleController from '../../controller/ConsoleController';
+import AuthController from '../../controller/AuthController';
 
 export default class ExpressApplication {
   private app: Application;
@@ -19,12 +20,14 @@ export default class ExpressApplication {
 
   private _initializeIoCContainer(): void {
     this.IoCContainer.bind<StorageService>(StorageService).toSelf();
-    this.IoCContainer.bind<StorageController>(StorageController).toSelf();
+    this.IoCContainer.bind<ConsoleController>(ConsoleController).toSelf();
+    this.IoCContainer.bind<AuthController>(AuthController).toSelf();
   }
 
   private _configureApp(): void {
     configureMiddleware(this.app);
-    HotSpring.bind(this.app, this.IoCContainer, StorageController)
+    const constroller = [AuthController, ConsoleController];
+    constroller.forEach((ctlClass) => HotSpring.bind(this.app, this.IoCContainer, ctlClass))
     configureErrorHandling(this.app);
   }
 

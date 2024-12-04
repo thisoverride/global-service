@@ -6,7 +6,7 @@ import { LanguageManager } from "../utils/LanguageManager";
 import { Translation } from "../@type/global";
 
 @injectable()
-export default class StorageController {
+export default class ConsoleController {
   private readonly TRANSLATION: Translation = LanguageManager.getTranslations();
   private readonly LOCAL: string = LanguageManager.getCurrentLanguage();
   private _storageService: StorageService;
@@ -38,10 +38,10 @@ export default class StorageController {
     }
   }
 
-  @GET("/vmx")
+  @GET("/cloudforge")
   public async renderVmx(request: Request, response: Response): Promise<void> {
     try {
-      response.render("pages/Vmx", {
+      response.render("pages/Xrush", {
         styles:
           '<link rel="stylesheet" href="/assets/css/vmx/vmx-style.css">',
       });

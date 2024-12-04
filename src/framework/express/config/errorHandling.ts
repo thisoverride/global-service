@@ -10,11 +10,12 @@ export const configureErrorHandling = (app: Application): void => {
         res.status(404);
 
         if (req.accepts('html')) {
-            res.render('errors/404', {
+            res.render('pages/404', {
                 t: translation,
                 local: lang,
                 url: req.url,
-                error: err
+                error: err,
+                layout: false
             });
             return;
         }

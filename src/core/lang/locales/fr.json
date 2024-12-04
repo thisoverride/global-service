@@ -28,9 +28,9 @@
   "notFound": {
     "title": "Page non trouvée",
     "message": "La page que vous recherchez n'a pas été trouvée",
-    "backLink": "Retourner à l'accueil ›",
+    "backLink": "Retourner à la console ›",
     "footer": {
-      "copyright": "Copyright © 2024 My Luminous. Tous droits réservés."
+      "copyright": "Copyright © 2024 SxCloudX. Tous droits réservés."
     }
   }
 }

@@ -7,76 +7,69 @@
   <title>Console de Gestion des Emails</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <%- typeof styles !== 'undefined' ? styles : '' %>
+  <%- typeof styles !=='undefined' ? styles : '' %>
 </head>
 
 <body>
   <!-- Navigation principale -->
-  <nav class="top-nav">
-    <div class="top-nav-left">
-      <div class="logo">
-        <a href="/"><i class="fab fa-aws"></i></a>
-      </div>
-      <button class="services-button" id="servicesButton">
-        <i class="fas fa-th"></i>
-        Services
-        <i class="fas fa-caret-down"></i>
-      </button>
-    </div>
-    <div class="top-nav-right">
-      <i class="fas fa-bell"></i>
-      <i class="fas fa-user-circle"></i>
-      <span>Admin</span>
-    </div>
-  </nav>
+  <%- include('../partials/nav') %>
 
   <!-- Panneau des services -->
   <div class="services-panel" id="servicesPanel">
-    <div class="services-search">
-      <input type="text" class="search-input" placeholder="Rechercher un service..." id="serviceSearch">
-    </div>
-    <div class="services-grid">
-      <!-- Email & Communication -->
-      <div class="service-category">
-        <h3>Email & Communication</h3>
-        <div class="service-list">
-          <a href="#" class="nav-item">
-            <i class="fas fa-envelope"></i>
-            <span>Email Service</span>
+    <div class="services-panel-content">
+      <div class="services-header">
+        <div class="search-input-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Rechercher un service..." id="serviceSearch">
+        </div>
+      </div>
+
+      <div class="services-list">
+        <div class="services-group">
+          <div class="letter-header">A</div>
+          <a href="/analytics" class="service-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
           </a>
-          <a href="#" class="nav-item">
+          <a href="/api" class="service-item">
+            <i class="fas fa-code"></i>
+            <span>API Management</span>
+          </a>
+        </div>
+
+        <div class="services-group">
+          <div class="letter-header">C</div>
+          <a href="/campaigns" class="service-item">
             <i class="fas fa-paper-plane"></i>
             <span>Campaign Manager</span>
           </a>
-        </div>
-      </div>
-
-      <!-- Sécurité -->
-      <div class="service-category">
-        <h3>Sécurité</h3>
-        <div class="service-list">
-          <a href="#" class="nav-item">
-            <i class="fas fa-shield-alt"></i>
-            <span>Gestion des accès</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-key"></i>
-            <span>Clés API</span>
+          <a href="/config" class="service-item">
+            <i class="fas fa-cog"></i>
+            <span>Configuration</span>
           </a>
         </div>
-      </div>
 
-      <!-- Surveillance -->
-      <div class="service-category">
-        <h3>Surveillance</h3>
-        <div class="service-list">
-          <a href="#" class="nav-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Métriques</span>
+        <div class="services-group">
+          <div class="letter-header">E</div>
+          <a href="/email" class="service-item">
+            <i class="fas fa-envelope"></i>
+            <span>Email Service</span>
           </a>
-          <a href="#" class="nav-item">
+        </div>
+
+        <div class="services-group">
+          <div class="letter-header">L</div>
+          <a href="/logs" class="service-item">
             <i class="fas fa-history"></i>
             <span>Logs</span>
+          </a>
+        </div>
+
+        <div class="services-group">
+          <div class="letter-header">S</div>
+          <a href="/stats" class="service-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Statistiques</span>
           </a>
         </div>
       </div>
@@ -84,36 +77,180 @@
   </div>
 
   <!-- Sidebar principale -->
-  <aside class="sidebar">
-    <nav class="nav-menu">
-      <a href="#dashboard" class="nav-item">
-        <i class="fas fa-home"></i>
-        <span>Tableau de bord</span>
-      </a>
-      <a href="#applications" class="nav-item">
-        <i class="fas fa-th-large"></i>
-        <span>Applications</span>
-      </a>
-      <a href="#templates" class="nav-item">
-        <i class="fas fa-envelope"></i>
-        <span>Modèles</span>
-      </a>
-      <a href="#security" class="nav-item">
-        <i class="fas fa-shield-alt"></i>
-        <span>Sécurité</span>
-      </a>
-      <a href="#monitoring" class="nav-item">
-        <i class="fas fa-chart-line"></i>
-        <span>Surveillance</span>
-      </a>
-    </nav>
-  </aside>
+  <div class="wrapper">
+
+    <aside class="sidebar">
+      <nav class="nav-menu">
+        <a href="#dashboard" class="nav-item">
+          <i class="fas fa-home"></i>
+          <span>Tableau de bord</span>
+        </a>
+        <a href="#applications" class="nav-item">
+          <i class="fas fa-th-large"></i>
+          <span>Applications</span>
+        </a>
+        <a href="#templates" class="nav-item">
+          <i class="fas fa-envelope"></i>
+          <span>Modèles</span>
+        </a>
+        <a href="#security" class="nav-item">
+          <i class="fas fa-shield-alt"></i>
+          <span>Sécurité</span>
+        </a>
+        <a href="#monitoring" class="nav-item">
+          <i class="fas fa-chart-line"></i>
+          <span>Surveillance</span>
+        </a>
+      </nav>
+    </aside>
+  </div>
 
   <!-- Contenu principal -->
   <main class="main-content">
     <%- body %>
   </main>
-  <!-- Suite du code précédent -->
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('searchInput');
+      const suggestionsContainer = document.getElementById('searchSuggestions');
+
+      // Exemple de données de suggestions
+      const suggestions = [
+  {
+    title: 'Services Email',
+    description: 'Gérer les services de messagerie',
+    category: 'Email',
+    icon: 'fa-envelope'
+  },
+  {
+    title: 'Configuration SMTP',
+    description: 'Paramètres du serveur SMTP',
+    category: 'Email',
+    icon: 'fa-cog'
+  },
+  {
+    title: 'Statistiques',
+    description: 'Visualiser les statistiques d\'envoi',
+    category: 'Analytics',
+    icon: 'fa-chart-bar'
+  },
+];
+
+
+      // Fonction pour afficher les suggestions
+      function showSuggestions(searchText) {
+        suggestionsContainer.innerHTML = '';
+
+        const filteredSuggestions = suggestions.filter(suggestion =>
+          suggestion.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          suggestion.description.toLowerCase().includes(searchText.toLowerCase())
+        );
+
+        if (filteredSuggestions.length > 0) {
+          filteredSuggestions.forEach(suggestion => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+
+            const highlightedTitle = highlightText(suggestion.title, searchText);
+            const highlightedDesc = highlightText(suggestion.description, searchText);
+
+            div.innerHTML = `
+                    <i class="fas ${suggestion.icon} suggestion-icon"></i>
+                    <div class="suggestion-content">
+                        <div class="suggestion-title">${highlightedTitle}</div>
+                        <div class="suggestion-description">${highlightedDesc}</div>
+                    </div>
+                    <span class="suggestion-category">${suggestion.category}</span>
+                `;
+
+            div.addEventListener('click', () => {
+              searchInput.value = suggestion.title;
+              suggestionsContainer.classList.remove('active');
+            });
+
+            suggestionsContainer.appendChild(div);
+          });
+
+          suggestionsContainer.classList.add('active');
+        } else {
+          suggestionsContainer.classList.remove('active');
+        }
+      }
+
+      // Fonction pour mettre en surbrillance le texte recherché
+      function highlightText(text, searchText) {
+        if (!searchText) return text;
+        const regex = new RegExp(`(${searchText})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+      }
+
+      // Écouteurs d'événements
+      searchInput.addEventListener('input', (e) => {
+        const searchText = e.target.value.trim();
+        if (searchText.length > 0) {
+          showSuggestions(searchText);
+        } else {
+          suggestionsContainer.classList.remove('active');
+        }
+      });
+
+      // Fermer les suggestions en cliquant en dehors
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+          suggestionsContainer.classList.remove('active');
+        }
+      });
+
+
+
+        const servicesButton = document.getElementById('servicesButton');
+        const servicesPanel = document.getElementById('servicesPanel');
+        const serviceSearch = document.getElementById('serviceSearch');
+
+        servicesButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          servicesPanel.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (servicesPanel.classList.contains('active') &&
+            !servicesPanel.contains(e.target) &&
+            !servicesButton.contains(e.target)) {
+            servicesPanel.classList.remove('active');
+          }
+        });
+
+        serviceSearch.addEventListener('input', (e) => {
+          const searchText = e.target.value.toLowerCase();
+          const serviceItems = document.querySelectorAll('.service-item');
+          const serviceGroups = document.querySelectorAll('.services-group');
+
+          serviceGroups.forEach(group => {
+            let hasVisibleItems = false;
+            const items = group.querySelectorAll('.service-item');
+
+            items.forEach(item => {
+              const text = item.textContent.toLowerCase();
+              if (text.includes(searchText)) {
+                item.style.display = 'flex';
+                hasVisibleItems = true;
+              } else {
+                item.style.display = 'none';
+              }
+            });
+
+            // Afficher/masquer le groupe entier
+            const letterHeader = group.querySelector('.letter-header');
+            letterHeader.style.display = hasVisibleItems ? 'block' : 'none';
+            group.style.display = hasVisibleItems ? 'block' : 'none';
+          });
+        });
+      
+
+    });
+  </script>
 
 </body>
 
