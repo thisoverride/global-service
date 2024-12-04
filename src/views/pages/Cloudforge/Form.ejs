@@ -1,0 +1,67 @@
+<section class="create-vm-section">
+  <div class="form-header">
+    <h1 class="form-title">Créer une nouvelle machine virtuelle</h1>
+    <p class="form-subtitle">Configurez les ressources et options de votre nouvelle VM</p>
+  </div>
+
+  <div class="form-container">
+    <div class="form-main">
+
+      <div class="form-section">
+        <h2 class="section-title">Configuration de base</h2>
+        <div class="section-content">
+          <div class="form-group">
+            <label class="form-label">Nom de la VM</label>
+            <input type="text" class="form-control" placeholder="ex: prod-server-01">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="3" placeholder="Description de votre VM"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Image système</h2>
+        <div class="section-content">
+          <div class="form-group">
+            <label class="form-label">Génération</label>
+            <select class="form-select">
+              <option value="1">Gen 1</option>
+              <option value="2">Gen 2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select class="form-select">
+              <option value="">Sélectionner une image</option>
+              <option value="ubuntu20">Ubuntu 20.04 LTS</option>
+              <option value="debian11">Debian 11</option>
+              <option value="centos8">CentOS 8</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Stockage</h2>
+        <div class="section-content">
+          <div class="form-group">
+            <label class="form-label">Volume racine</label>
+            <input type="number" class="form-control" value="60" min="8" max="1000">
+            <span class="form-sublabel">Taille en GB (min: 8GB, max: 1000GB)</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mémoire RAM</label>
+            <input type="number" class="form-control" value="4" min="8" max="1000">
+            <span class="form-sublabel"></span>
+            <div class="div">dynamique</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-secondary">Annuler</button>
+    <button class="btn btn-primary">Créer la VM</button>
+  </div>
+</section>

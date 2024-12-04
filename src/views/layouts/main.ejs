@@ -7,9 +7,7 @@
   <title>Console de Gestion des Emails</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="stylesheet" href=<%- typeof styles !=='undefined' ? styles : '' %>>
-  
-  
+    <%- typeof styles !=='undefined' ? styles : '' %>
 </head>
 
 <body>
@@ -51,10 +49,11 @@
   <main class="main-content">
     <%- body %>
   </main>
+  <script type="module" src="/assets/js/main.js"></script>
 
-
-  <script>
+  <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
+
       const searchInput = document.getElementById('searchInput');
       const suggestionsContainer = document.getElementById('searchSuggestions');
 
@@ -145,6 +144,17 @@
           suggestionsContainer.classList.remove('active');
         }
       });
+
+
+
+
+
+
+
+
+
+   
+
 
 
 

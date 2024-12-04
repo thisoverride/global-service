@@ -53,66 +53,13 @@ export default class ConsoleController {
     }
   }
 
-  private getStyleLink(stylePath: string): string {
-    return `<link rel="stylesheet" href="${stylePath}">`;
-  }
 
-  @GET("/")
-  public async renderHome(request: Request, response: Response): Promise<void> {
-    try {
-      const menuServices = await this._staticDataManager.loadData(this.STATIC_PATHS.menuServices + '/services.json');
-
-      response.render("pages/home", {
-        styles: this.getStyleLink(this.STATIC_PATHS.styles.home),
-        menuServices,
-        success: true
-      });
-    } catch (error) {
-      console.error('Erreur dans HomeController:', error);
-      
-      response.render("pages/home", {
-        styles: this.getStyleLink(this.STATIC_PATHS.styles.home),
-        menuServices: [],
-        success: false,
-        error: error instanceof Error ? error.message : 'Une erreur est survenue'
-      });
-    }
-  }
-
-  @GET("/xrush")
-  public async renderAutomator(request: Request, response: Response): Promise<void> {
-    try {
-      const menuServices = await this._staticDataManager.loadData(this.STATIC_PATHS.menuServices + '/services.json');
-
-      response.render("pages/Xrush", {
-        styles: this.getStyleLink(this.STATIC_PATHS.styles.wpauto),
-        menuServices,
-        success: true
-      });
-    } catch (error) {
-      response.render("index");
-    }
-  }
-
-  @GET("/cloudforge")
-  public async renderCloudForge(request: Request, response: Response): Promise<void> {
-    try {
-      const menuServices = await this._staticDataManager.loadData(this.STATIC_PATHS.menuServices + '/services.json');
-
-      response.render("pages/Cloudforge/Main", {
-        styles: this.getStyleLink(this.STATIC_PATHS.styles.vmx),
-        menuServices,
-        success: true
-      });
-    } catch (error) {
-      response.render("index");
-    }
-  }
 
   @GET("/api/suggestions")
   public async getSuggestions(request: Request, response: Response): Promise<void> {
   try {
     const suggestions = await this._staticDataManager.loadData(this.STATIC_PATHS.menuServices + '/parrot.json');
+    console.log(suggestions)
     response.json(suggestions);
   } catch (error) {
     response.status(500).json({ 

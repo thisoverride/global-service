@@ -310,6 +310,7 @@ th {
 }
 
 .suggestion-category {
+  text-transform: capitalize;
   font-size: 0.75rem;
   color: var(--aws-blue);
   background-color: var(--bg-light);
@@ -319,8 +320,8 @@ th {
 
 /* Style pour la mise en surbrillance du texte recherché */
 .highlight {
-  background-color: rgba(255, 153, 0, 0.2);
-  padding: 0 2px;
+  /* background-color: rgba(255, 153, 0, 0.2); */
+  /* padding: 0 2px; */
   border-radius: 2px;
 }
 /* _________________________ */

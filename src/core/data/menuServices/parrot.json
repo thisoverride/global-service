@@ -1,0 +1,18 @@
+{
+  "suggestions": [
+    {
+      "title": "CloudForge",
+      "description": "Création de machines virtuelles personnalisées",
+      "category": "infrastructure",
+      "icon": "fa-envelope",
+      "path": "/cloudforge"
+    },
+    {
+      "title": "X-Rush",
+      "description": "Déploiement rapide d'environnements web complets",
+      "category": "Developpement",
+      "icon": "fa-cog",
+      "path": "/xrush"
+    }
+  ]
+}
