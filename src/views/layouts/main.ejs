@@ -7,7 +7,9 @@
   <title>Console de Gestion des Emails</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <%- typeof styles !=='undefined' ? styles : '' %>
+  <link rel="stylesheet" href=<%- typeof styles !=='undefined' ? styles : '' %>>
+  
+  
 </head>
 
 <body>
@@ -15,66 +17,6 @@
   <%- include('../partials/nav') %>
 
   <!-- Panneau des services -->
-  <div class="services-panel" id="servicesPanel">
-    <div class="services-panel-content">
-      <div class="services-header">
-        <div class="search-input-container">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" class="search-input" placeholder="Rechercher un service..." id="serviceSearch">
-        </div>
-      </div>
-
-      <div class="services-list">
-        <div class="services-group">
-          <div class="letter-header">A</div>
-          <a href="/analytics" class="service-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Analytics</span>
-          </a>
-          <a href="/api" class="service-item">
-            <i class="fas fa-code"></i>
-            <span>API Management</span>
-          </a>
-        </div>
-
-        <div class="services-group">
-          <div class="letter-header">C</div>
-          <a href="/campaigns" class="service-item">
-            <i class="fas fa-paper-plane"></i>
-            <span>Campaign Manager</span>
-          </a>
-          <a href="/config" class="service-item">
-            <i class="fas fa-cog"></i>
-            <span>Configuration</span>
-          </a>
-        </div>
-
-        <div class="services-group">
-          <div class="letter-header">E</div>
-          <a href="/email" class="service-item">
-            <i class="fas fa-envelope"></i>
-            <span>Email Service</span>
-          </a>
-        </div>
-
-        <div class="services-group">
-          <div class="letter-header">L</div>
-          <a href="/logs" class="service-item">
-            <i class="fas fa-history"></i>
-            <span>Logs</span>
-          </a>
-        </div>
-
-        <div class="services-group">
-          <div class="letter-header">S</div>
-          <a href="/stats" class="service-item">
-            <i class="fas fa-chart-bar"></i>
-            <span>Statistiques</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Sidebar principale -->
   <div class="wrapper">
@@ -136,6 +78,7 @@
     category: 'Analytics',
     icon: 'fa-chart-bar'
   },
+
 ];
 
 

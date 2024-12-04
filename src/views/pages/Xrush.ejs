@@ -1,174 +1,233 @@
-<section class="create-vm-section">
-  <div class="form-header">
-    <h1 class="form-title">Créer une nouvelle machine virtuelle</h1>
-    <p class="form-subtitle">Configurez les ressources et options de votre nouvelle VM</p>
+<section class="docker-section">
+  <div class="section-header">
+    <h1>Créer un WPCompose</h1>
+    <div class="breadcrumb">
+      <a href="#" class="breadcrumb-item">Console</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="#" class="breadcrumb-item">Docker</a>
+      <i class="fas fa-chevron-right"></i>
+      <span class="breadcrumb-item active">WordPress Compose</span>
+    </div>
   </div>
 
-  <div class="form-container">
-    <div class="form-main">
-
-      <div class="form-section">
-        <h2 class="section-title">Configuration de base</h2>
-        <div class="section-content">
-          <div class="form-group">
-            <label class="form-label">Nom de la VM</label>
-            <input type="text" class="form-control" placeholder="ex: prod-server-01">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Description</label>
-            <textarea class="form-control" rows="3" placeholder="Description de votre VM"></textarea>
-          </div>
-        </div>
+  <form>
+    <!-- Configuration du projet -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-project-diagram"></i>
+        Configuration du projet
       </div>
-
-      <div class="form-section">
-        <h2 class="section-title">Image système</h2>
-        <div class="section-content">
+      <div class="card-body">
+        <div class="form-grid">
           <div class="form-group">
-            <label class="form-label">Génération</label>
-            <select class="form-select">
-              <option value="1">Gen 1</option>
-              <option value="2">Gen 2</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <select class="form-select">
-              <option value="">Sélectionner une image</option>
-              <option value="ubuntu20">Ubuntu 20.04 LTS</option>
-              <option value="debian11">Debian 11</option>
-              <option value="centos8">CentOS 8</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-section">
-        <h2 class="section-title">Stockage</h2>
-        <div class="section-content">
-          <div class="form-group">
-            <label class="form-label">Volume racine</label>
-            <input type="number" class="form-control" value="60" min="8" max="1000">
-            <span class="form-sublabel">Taille en GB (min: 8GB, max: 1000GB)</span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Mémoire RAM</label>
-            <input type="number" class="form-control" value="4" min="8" max="1000">
-            <span class="form-sublabel"></span>
-            <div class="div">dynamique</div>
+            <label class="form-label">Nom du projet</label>
+            <input type="text" class="form-control" name="dirname" required>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Configuration MySQL -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-database"></i>
+        Configuration MySQL
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Utilisateur MySQL</label>
+            <input type="text" class="form-control" name="mysqlUser" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <div class="password-input-group">
+              <input type="password" class="form-control" name="mysqlRootPassword" placeholder="Entrez votre mot de passe">
+              <button type="button" class="password-toggle" onclick="togglePassword(this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Port MySQL</label>
+            <div class="input-group">
+              <input type="number" class="form-control" name="mysqlPort" value="3306" min="1024" max="65535"
+                required>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration WordPress -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fab fa-wordpress"></i>
+        Configuration WordPress
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Version WordPress</label>
+            <select class="form-select" name="wpVersion">
+              <option value="latest">Dernière version</option>
+              <option value="6.4">6.4</option>
+              <option value="6.3">6.3</option>
+              <option value="6.2">6.2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom d'utilisateur admin</label>
+            <input type="text" class="form-control" name="username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <div class="password-input-group">
+              <input type="password" class="form-control" name="wpPassword" placeholder="Entrez votre mot de passe">
+              <button type="button" class="password-toggle" onclick="togglePassword(this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email admin</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Port WordPress</label>
+            <div class="input-group">
+              <input type="number" class="form-control" name="wpPort" value="8080" min="1024" max="65535" required>
+              <span class="input-addon">TCP</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom d'hôte</label>
+            <input type="text" class="form-control" name="wpHost" value="localhost" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Langue</label>
+            <select class="form-select" name="language">
+              <option value="fr_FR">Français</option>
+              <option value="en_US">English (US)</option>
+              <option value="en_GB">English (UK)</option>
+              <option value="de_DE">Deutsch</option>
+              <option value="es_ES">Español</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plugins-section">
+      <div class="card plugins-card">
+          <div class="card-header">
+              <div class="header-title">
+                  <i class="fas fa-puzzle-piece"></i>
+                  <span>Plugins WordPress</span>
+              </div>
+          </div>
+
+          <div class="card-body">
+              <!-- Barre de recherche et filtres -->
+              <div class="search-section">
+                  <div class="search-container">
+                      <i class="fas fa-search"></i>
+                      <input type="text" placeholder="Rechercher des plugins..." class="search-input">
+                  </div>
+                  <div class="filters-container">
+                      <select class="form-select">
+                          <option value="">Toutes les catégories</option>
+                          <option value="seo">SEO</option>
+                          <option value="security">Sécurité</option>
+                          <option value="ecommerce">E-commerce</option>
+                          <option value="performance">Performance</option>
+                      </select>
+                      <select class="form-select">
+                          <option value="popular">Plus populaires</option>
+                          <option value="recent">Plus récents</option>
+                          <option value="rating">Mieux notés</option>
+                      </select>
+                  </div>
+              </div>
+
+              <!-- Conteneur des listes de plugins -->
+              <div class="plugins-container">
+                  <!-- Liste des plugins disponibles -->
+                  <div class="plugins-available">
+                      <div class="plugins-list-header">
+                          <h3>Plugins disponibles</h3>
+                          <span class="plugins-count">24 plugins</span>
+                      </div>
+                      <div class="plugins-list">
+                          <!-- Exemple de plugin -->
+                          <div class="plugin-card">
+                              <div class="plugin-icon">
+                                  <img src="/api/placeholder/48/48" alt="WooCommerce">
+                              </div>
+                              <div class="plugin-content">
+                                  <div class="plugin-header">
+                                      <h4>WooCommerce</h4>
+                                      <span class="plugin-version">7.0.0</span>
+                                  </div>
+                                  <div class="plugin-details">
+                                      <span class="plugin-author">Par WooCommerce</span>
+                                      <div class="plugin-stats">
+                                          <span><i class="fas fa-download"></i> 5M+</span>
+                                          <span><i class="fas fa-star"></i> 4.5</span>
+                                      </div>
+                                  </div>
+                                  <p class="plugin-description">
+                                      Solution e-commerce complète pour WordPress
+                                  </p>
+                              </div>
+                              <div class="plugin-actions">
+                                  <button class="action-btn add-btn">
+                                      <i class="fas fa-plus"></i>
+                                  </button>
+                              </div>
+                          </div>
+                          <!-- Répéter pour d'autres plugins -->
+                      </div>
+                  </div>
+
+                  <!-- Liste des plugins sélectionnés -->
+                  <div class="plugins-selected">
+                      <div class="plugins-list-header"> 
+                          <h3>Plugins sélectionnés</h3>
+                          <span class="selected-count">3</span>
+                      </div>
+                      <div class="selected-list">
+                          <!-- Exemple de plugin sélectionné -->
+                          <div class="selected-plugin">
+                              <div class="plugin-icon">
+                                  <img src="/api/placeholder/32/32" alt="Yoast SEO">
+                              </div>
+                              <div class="plugin-content">
+                                  <h4>Yoast SEO</h4>
+                                  <span class="plugin-version">20.0</span>
+                              </div>
+                              <button class="action-btn remove-btn">
+                                  <i class="fas fa-times"></i>
+                              </button>
+                          </div>
+                          <!-- Répéter pour d'autres plugins sélectionnés -->
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
-  <div class="form-actions">
-    <button class="btn btn-secondary">Annuler</button>
-    <button class="btn btn-primary">Créer la VM</button>
-  </div>
+
+    <!-- Actions -->
+      <div class="form-actions">
+        <button type="reset" class="btn btn-secondary">
+          <i class="fas fa-undo"></i>
+          Réinitialiser
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-docker"></i>
+          Créer le template
+        </button>
+      </div>
+  </form>
 </section>
-
-
-
-  <!-- <section class="vm-section">
-  <div class="section-header">
-      <h1>Machines Virtuelles</h1>
-      <button class="btn btn-primary">
-          <i class="fas fa-plus"></i>
-          Nouvelle VM
-      </button>
-  </div>
-
-  <div class="filters-bar">
-      <div class="search-box">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Rechercher une VM...">
-      </div>
-      <div class="filters">
-          <select class="form-select">
-              <option value="">Statut</option>
-              <option value="running">En cours</option>
-              <option value="stopped">Arrêtée</option>
-              <option value="pending">En attente</option>
-          </select>
-          <select class="form-select">
-              <option value="">Types</option>
-              <option value="t2.micro">t2.micro</option>
-              <option value="t2.small">t2.small</option>
-              <option value="t2.medium">t2.medium</option>
-          </select>
-      </div>
-  </div>
-
-  <div class="vm-grid">
-
-      <div class="vm-card">
-          <div class="vm-header">
-              <div class="vm-status-badge status-running"></div>
-              <div class="vm-name">Production Server</div>
-              <div class="vm-id">vm-prod-01</div>
-          </div>
-          <div class="vm-details">
-              <div class="vm-info-grid">
-                  <span class="vm-label">Type:</span>
-                  <span class="vm-value">t2.medium</span>
-                  
-                  <span class="vm-label">Image:</span>
-                  <span class="vm-value">Ubuntu 20.04 LTS</span>
-                  
-                  <span class="vm-label">IP:</span>
-                  <span class="vm-value">172.16.0.10</span>
-                  
-                  <span class="vm-label">Stockage:</span>
-                  <span class="vm-value">50 GB</span>
-              </div>
-          </div>
-          <div class="vm-actions">
-              <button class="vm-btn btn-stop" title="Arrêter">
-                  <i class="fas fa-power-off"></i>
-              </button>
-              <button class="vm-btn btn-restart" title="Redémarrer">
-                  <i class="fas fa-sync"></i>
-              </button>
-              <button class="vm-btn" title="Modifier">
-                  <i class="fas fa-edit"></i>
-              </button>
-              <button class="vm-btn" title="Supprimer">
-                  <i class="fas fa-trash"></i>
-              </button>
-          </div>
-      </div>
-
-      <div class="vm-card">
-          <div class="vm-header">
-              <div class="vm-status-badge status-stopped"></div>
-              <div class="vm-name">Development Server</div>
-              <div class="vm-id">vm-dev-01</div>
-          </div>
-          <div class="vm-details">
-              <div class="vm-info-grid">
-                  <span class="vm-label">Type:</span>
-                  <span class="vm-value">t2.micro</span>
-                  
-                  <span class="vm-label">Image:</span>
-                  <span class="vm-value">Debian 11</span>
-                  
-                  <span class="vm-label">IP:</span>
-                  <span class="vm-value">172.16.0.11</span>
-                  
-                  <span class="vm-label">Stockage:</span>
-                  <span class="vm-value">20 GB</span>
-              </div>
-          </div>
-          <div class="vm-actions">
-              <button class="vm-btn btn-start" title="Démarrer">
-                  <i class="fas fa-power-off"></i>
-              </button>
-              <button class="vm-btn" title="Modifier">
-                  <i class="fas fa-edit"></i>
-              </button>
-              <button class="vm-btn" title="Supprimer">
-                  <i class="fas fa-trash"></i>
-              </button>
-          </div>
-      </div>
-  </div>
-</section> -->

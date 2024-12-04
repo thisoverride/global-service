@@ -386,7 +386,6 @@ th {
 }
 
 /* ________________________Panneau des services______________________________ */
-/* Panneau des services */
 .services-panel {
   display: none;
   position: fixed;
@@ -409,7 +408,6 @@ th {
   margin-left: 20px;
   height: auto;
   max-height: calc(100vh - var(--top-nav-height) - 20px);
-  /* border-radius: 8px; */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
@@ -418,11 +416,19 @@ th {
   padding: 1rem;
   background: var(--aws-blue);
   border-bottom: 1px solid var(--border-color);
-
 }
 
-.services-header .search-input-container {
+/* .search-input-container {
   max-width: 100%;
+} */
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--bg-light);
 }
 
 .services-list {
@@ -445,7 +451,7 @@ th {
 
 .service-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
   padding: 0.75rem 0.5rem;
   color: var(--bg-light);
@@ -455,22 +461,35 @@ th {
 }
 
 .service-item:hover {
-  background-color: var(--bg-light);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.service-item i {
-  font-size: 1rem;
+.service-icon svg {
   width: 24px;
-  color: var(--aws-blue);
+  height: 24px;
+  color: var(--bg-light);
 }
 
-.service-item span {
+.service-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.service-name {
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
-/* Animation d'entrée */
-.services-panel.active .services-panel-content {
-  animation: slideIn 0.3s ease forwards;
+.service-description {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.services-error {
+  color: var(--bg-light);
+  text-align: center;
+  padding: 1rem;
 }
 
 @keyframes slideIn {
@@ -484,13 +503,17 @@ th {
   }
 }
 
+.services-panel.active .services-panel-content {
+  animation: slideIn 0.3s ease forwards;
+}
+
 @media (max-width: 768px) {
   .services-panel-content {
     width: calc(100% - 40px);
     margin: 20px;
   }
 }
-/* ------------------------------------------------------- */
+/* -----------------------END -------------------------------- */
 
 /* Select personnalisé */
 .form-select {
@@ -581,10 +604,10 @@ th {
 }
 
 /* Recherche */
-.search-input-container {
+/* .search-input-container {
   position: relative;
   width: 100%;
-}
+} */
 
 .search-input {
   width: 100%;
@@ -883,4 +906,13 @@ input:checked + .switch-slider:before {
 .password-input-group.disabled .password-toggle {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.new-badge {
+  background: #48bb78;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
 }

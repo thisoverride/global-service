@@ -3,9 +3,11 @@ import { Container } from 'inversify';
 import HotSpring from './hotspring/core/HotSpring';
 import { configureMiddleware } from './config/middleware';
 import { configureErrorHandling } from './config/errorHandling';
-import StorageService from '../../service/StorageService';
+
 import ConsoleController from '../../controller/ConsoleController';
 import AuthController from '../../controller/AuthController';
+import HomeService from '../../services/HomeService';
+import { StaticDataManager } from '../../core/managers/StaticDataManager';
 
 export default class ExpressApplication {
   private app: Application;
@@ -19,9 +21,10 @@ export default class ExpressApplication {
   }
 
   private _initializeIoCContainer(): void {
-    this.IoCContainer.bind<StorageService>(StorageService).toSelf();
-    this.IoCContainer.bind<ConsoleController>(ConsoleController).toSelf();
-    this.IoCContainer.bind<AuthController>(AuthController).toSelf();
+    this.IoCContainer.bind<StaticDataManager>(StaticDataManager).toSelf().inSingletonScope();
+    this.IoCContainer.bind<HomeService>(HomeService).toSelf().inSingletonScope();
+    this.IoCContainer.bind<ConsoleController>(ConsoleController).toSelf().inRequestScope();
+    this.IoCContainer.bind<AuthController>(AuthController).toSelf().inRequestScope();
   }
 
   private _configureApp(): void {

@@ -25,3 +25,35 @@
     <span>Admin</span>
   </div>
 </nav>
+
+<div class="services-panel" id="servicesPanel">
+  <div class="services-panel-content">
+
+
+    <div class="services-list">
+      <% if (menuServices && menuServices.services) { %>
+        <% menuServices.services.forEach(group => { %>
+          <div class="services-group">
+            <div class="letter-header"><%= group.letter %></div>
+            <% group.items.forEach(service => { %>
+              <a href="<%= service.url %>" class="service-item" title="<%= service.description %>">
+                <div class="service-icon">
+                  <%- service.icon %>
+                </div>
+                <div class="service-info">
+                  <span class="service-name"><%= service.name %></span>
+                  <span class="service-description"><%= service.description %></span>
+                </div>
+              </a>
+            <% }); %>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="services-error">
+          <span>Les services ne sont pas disponibles pour le moment.</span>
+        </div>
+      <% } %>
+    </div>
+    
+  </div>
+</div>
