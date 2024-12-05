@@ -7,14 +7,27 @@
   },
   "services": [
     {
-      "letter": "V",
+      "letter": "C",
       "items": [
         {
           "id": "cf",
+          "name": "CloudView",
+          "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path fill='currentColor' d='M16 6c-2.8 0-4.834 1.134-6.149 2.742c-1.055 1.289-1.622 2.85-1.794 4.305C3.93 13.47 2 16.644 2 19c0 1.145.284 2.665 1.372 3.909C4.485 24.179 6.292 25 9 25h9.12l2.162-3.56a1.5 1.5 0 0 0 .218-.779v-3.21A2.5 2.5 0 0 1 21 12.5h2.884c-.328-2.04-1.321-3.581-2.626-4.649C19.682 6.561 17.7 6 16 6m4 9a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2h-1v4.664a3 3 0 0 0 .436 1.557l.473.779h-7.82l.476-.782A3 3 0 0 0 22 20.661V16h-1a1 1 0 0 1-1-1m.18 9.5l-.886 1.459c-.81 1.333.15 3.038 1.71 3.038h7.991c1.56 0 2.519-1.705 1.71-3.038l-.886-1.459z'/></svg>",
+          "url": "/cloudview",
+          "description": "Moniteur de ressources et d'application",
+          "category": "Infrastructure",
+          "tags": ["VM", "Cloud", "Infrastructure", "Virtualisation"],
+          "isNew": true,
+          "order": 1,
+          "status": "active",
+          "permissions": ["create", "read", "update", "delete"]
+        },
+        {
+          "id": "cf",
           "name": "CloudForge",
-          "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' d='m24 3.5l17.754 10.25v20.5L24 44.5L6.246 34.25v-20.5z'/><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' d='M41.754 13.75L24 24L6.246 13.75M24 24v20.5m0-35.875v3.417'/><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' d='M18.082 15.459L24 12.042l5.918 3.417'/><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' d='m24 8.625l-8.877 5.125L24 18.875l8.877-5.125zM10.685 31.687l2.958-1.708m5.919 3.417l-5.919-3.417v-6.835'/><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' d='M19.562 26.563v10.25l-8.877-5.125v-10.25zm8.877 0v10.25l8.876-5.125v-10.25zm8.877 5.124l-2.96-1.708'/><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' d='m28.439 33.396l5.918-3.417v-6.835'/></svg>",
+          "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><path fill='currentColor' d='M28 22h2v8h-8v-2h-2v4h12V20h-4z' class='clr-i-outline clr-i-outline-path-1'/><path fill='currentColor' d='M14 30H6v-8h2v-2H4v12h12v-4h-2z' class='clr-i-outline clr-i-outline-path-2'/><path fill='currentColor' d='M8 14H6V6h8v2h2V4H4v12h4z' class='clr-i-outline clr-i-outline-path-3'/><path fill='currentColor' d='M20 4v4h2V6h8v8h-2v2h4V4z' class='clr-i-outline clr-i-outline-path-4'/><path fill='currentColor' d='M11 11h6v6h-6z' class='clr-i-outline clr-i-outline-path-5'/><path fill='currentColor' d='M19 11h6v6h-6z' class='clr-i-outline clr-i-outline-path-6'/><path fill='currentColor' d='M11 19h6v6h-6z' class='clr-i-outline clr-i-outline-path-7'/><path fill='currentColor' d='M19 19h6v6h-6z' class='clr-i-outline clr-i-outline-path-8'/><path fill='none' d='M0 0h36v36H0z'/></svg>",
           "url": "/cloudforge",
-          "description": "Service de création de machines virtuelles personnalisées",
+          "description": "Déploiement de machines virtuelles",
           "category": "Infrastructure",
           "tags": ["VM", "Cloud", "Infrastructure", "Virtualisation"],
           "isNew": true,
@@ -30,7 +43,7 @@
         {
           "id": "xrush",
           "name": "X-Rush",
-          "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' d='m6.136 21.942l10.72-5.276zm15.505 18.51v-14.4m0 14.4l-4.775-9.01m-13.35-5.39h18.128m-18.129 0l13.35 5.39m4.776-9.506V3.502m-4.785 13.164L21.638 3.5M6.136 21.942H21.63m20.234 4.116l-10.72 5.276zM26.359 7.548v14.4m0-14.4l4.775 9.01m13.35 5.39H26.357m18.129 0l-13.35-5.39m-4.776 9.506v18.434m4.785-13.164L26.362 44.5m15.502-18.442H26.37'/></svg>",
+          "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><path fill='currentColor' d='M223.326 57.92c-77.993 3.042-98.942 133.67-55.103 240.361c3.45 11.803 7.935 23.432 13.205 34.728C126.818 346.936 65.248 354.678 8 354.387c3.38.676 6.758 1.358 10.814 2.034c55.348 11.028 119.019 14.147 181.655 10.682c61.852 94.222 175.6 141.207 200.999-13.39c-.677.677-2.026.672-4.054 1.348c-32.044 69.595-89.288 55.357-133.59 6.232c116.078-14.943 216.774-52.363 237.02-103.576c27.044-70.311-123.71-120.343-300.164-114.258c-.603 0-1.206.022-1.81.025c8.9-51.908 41.114-83.115 103.22-54.785c-30.613-22.48-56.926-31.632-78.764-30.78Zm-24.706 87.176c90.64 10.741 169.414 47.365 136.587 103.827c-15.916 27.202-53.836 50.521-102.36 68.294c-3.255-5.923-6.36-11.995-9.191-18.262c-22.57-50.085-32.207-109.316-25.036-153.859'/></svg>",
           "url": "/xrush",
           "description": "Déploiement rapide d'environnements web complets",
           "category": "Web Development",

@@ -1,0 +1,127 @@
+<section class="section">
+  <div class="section-header">
+    <div>
+      <h1>Applications</h1>
+      <div class="breadcrumb">
+        <a href="#" class="breadcrumb-item">Console</a>
+        <i class="fas fa-chevron-right"></i>
+        <span class="breadcrumb-item active">Applications</span>
+      </div>
+    </div>
+    <button class="btn btn-primary js-create-btn">
+      <i class="fas fa-plus"></i>
+      Ajouter
+    </button>
+  </div>
+
+  <div class="filters-bar">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" class="js-search" placeholder="Rechercher...">
+    </div>
+    <div class="filters">
+      <select class="form-select js-status-filter">
+        <option value="">Statut</option>
+        <option value="active">Actif</option>
+        <option value="inactive">Inactif</option>
+        <option value="warning">Warning</option>
+      </select>
+      <select class="form-select js-type-filter">
+        <option value="">Type</option>
+        <option value="monitoring">Monitoring</option>
+        <option value="logging">Logging</option>
+        <option value="security">Security</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" class="checkbox-all">
+          </th>
+          <th>Nom</th>
+          <th>Type</th>
+          <th>Statut</th>
+          <th>Dernière activité</th>
+          <th>Alertes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <input type="checkbox" class="checkbox-item">
+          </td>
+          <td>
+            <div class="app-info">
+              <img src="/images/cloudwatch.png" alt="CloudWatch" class="app-icon">
+              <div>
+                <div class="app-name">CloudWatch</div>
+                <div class="app-id">app-cw-01</div>
+              </div>
+            </div>
+          </td>
+          <td>Monitoring</td>
+          <td>
+            <span class="status-badge status-active">Actif</span>
+          </td>
+          <td>Il y a 5 minutes</td>
+          <td>
+            <span class="alert-count">3</span>
+          </td>
+          <td>
+            <div class="action-group">
+              <button class="action-btn" title="Configurer">
+                <i class="fas fa-cog"></i>
+              </button>
+              <button class="action-btn" title="Voir les logs">
+                <i class="fas fa-list"></i>
+              </button>
+              <button class="action-btn" title="Plus d'options">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" class="checkbox-item">
+          </td>
+          <td>
+            <div class="app-info">
+              <img src="/images/guard-duty.png" alt="GuardDuty" class="app-icon">
+              <div>
+                <div class="app-name">GuardDuty</div>
+                <div class="app-id">app-gd-01</div>
+              </div>
+            </div>
+          </td>
+          <td>Security</td>
+          <td>
+            <span class="status-badge status-warning">Warning</span>
+          </td>
+          <td>Il y a 15 minutes</td>
+          <td>
+            <span class="alert-count warning">5</span>
+          </td>
+          <td>
+            <div class="action-group">
+              <button class="action-btn" title="Configurer">
+                <i class="fas fa-cog"></i>
+              </button>
+              <button class="action-btn" title="Voir les logs">
+                <i class="fas fa-list"></i>
+              </button>
+              <button class="action-btn" title="Plus d'options">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

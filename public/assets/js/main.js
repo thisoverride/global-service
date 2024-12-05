@@ -11,6 +11,5 @@ document.addEventListener('DOMContentLoaded', () => {
       container: document.getElementById('searchSuggestions')
     }
   };
-  
-  const serviceManager = new ServiceManager(config);
+   new ServiceManager(config);
 });

@@ -13,7 +13,9 @@ interface StaticPaths {
     home: string;
     wpauto: string;
     vmx: string;
-  };
+    cloudview: string
+  }
+  script: any
 }
 
 @injectable()
@@ -24,7 +26,11 @@ export default class ConsoleController {
     styles: {
       home: '/assets/css/home/hc-style.css',
       wpauto: '/assets/css/wpauto/wpauto-style.css',
-      vmx: '/assets/css/vmx/vmx-style.css'
+      vmx: '/assets/css/vmx/vmx-style.css',
+      cloudview: '/assets/css/cloudview/cvw_style.css',
+    },
+    script : {
+      cloudforge : '/assets/js/view/Test.js'
     }
   };
 
@@ -56,6 +62,10 @@ export default class ConsoleController {
   private getStyleLink(stylePath: string): string {
     return `<link rel="stylesheet" href="${stylePath}">`;
   }
+  private getScriptLink(scriptPath: string): string {
+    return `<script type="module" src="${scriptPath}"></script>`;
+}
+
 
   @GET("/")
   public async renderHome(request: Request, response: Response): Promise<void> {
@@ -80,13 +90,14 @@ export default class ConsoleController {
   }
 
   @GET("/xrush")
-  public async renderAutomator(request: Request, response: Response): Promise<void> {
+  public async renderXrush(request: Request, response: Response): Promise<void> {
     try {
       const menuServices = await this._staticDataManager.loadData(this.STATIC_PATHS.menuServices + '/services.json');
 
       response.render("pages/Xrush", {
         styles: this.getStyleLink(this.STATIC_PATHS.styles.wpauto),
         menuServices,
+        title : 'X-Rush',
         success: true
       });
     } catch (error) {
@@ -101,7 +112,26 @@ export default class ConsoleController {
 
       response.render("pages/Cloudforge/Main", {
         styles: this.getStyleLink(this.STATIC_PATHS.styles.vmx),
+        script : this.getScriptLink(this.STATIC_PATHS.script.cloudforge),
         menuServices,
+        title : 'CloudForge',
+        success: true
+      });
+    } catch (error) {
+      response.render("index");
+    }
+  }
+
+  @GET("/cloudview")
+  public async renderCloudView(request: Request, response: Response): Promise<void> {
+    try {
+      const menuServices = await this._staticDataManager.loadData(this.STATIC_PATHS.menuServices + '/services.json');
+
+      response.render("pages/CloudView/Main", {
+        styles: this.getStyleLink(this.STATIC_PATHS.styles.cloudview),
+        // script : this.getScriptLink(this.STATIC_PATHS.script.cloudforge),
+        menuServices,
+        title : 'CloudView',
         success: true
       });
     } catch (error) {

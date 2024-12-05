@@ -1,104 +1,180 @@
-<section class="vm-section">
+<section class="dsn ecreate-vm-section">
+  <div class="form-header">
+    <h1 class="form-title">Créer une nouvelle machine virtuelle</h1>
+    <p class="form-subtitle">Configurez les ressources et options de votre nouvelle VM</p>
+  </div>
+
+  <div class="form-container">
+    <div class="form-main">
+
+      <div class="form-section">
+        <h2 class="section-title">Configuration de base</h2>
+        <div class="section-content">
+          <div class="form-group">
+            <label class="form-label">Nom de la VM</label>
+            <input type="text" class="form-control" placeholder="ex: prod-server-01">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="3" placeholder="Description de votre VM"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Image système</h2>
+        <div class="section-content">
+          <div class="form-group">
+            <label class="form-label">Génération</label>
+            <select class="form-select">
+              <option value="1">Gen 1</option>
+              <option value="2">Gen 2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select class="form-select">
+              <option value="">Sélectionner une image</option>
+              <option value="ubuntu20">Ubuntu 20.04 LTS</option>
+              <option value="debian11">Debian 11</option>
+              <option value="centos8">CentOS 8</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Stockage</h2>
+        <div class="section-content">
+          <div class="form-group">
+            <label class="form-label">Volume racine</label>
+            <input type="number" class="form-control" value="60" min="8" max="1000">
+            <span class="form-sublabel">Taille en GB (min: 8GB, max: 1000GB)</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mémoire RAM</label>
+            <input type="number" class="form-control" value="4" min="8" max="1000">
+            <span class="form-sublabel"></span>
+            <div class="div">dynamique</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-secondary">Annuler</button>
+    <button class="btn btn-primary">Créer la VM</button>
+  </div>
+</section>
+
+
+
+<section class="section">
   <div class="section-header">
-      <h1>Machines Virtuelles</h1>
-      <button class="btn btn-primary">
-          <i class="fas fa-plus"></i>
-          Nouvelle VM
-      </button>
+    <div>
+      <h1><%- title %></h1>
+      <div class="breadcrumb">
+        <a href="#" class="breadcrumb-item">Console</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="#" class="breadcrumb-item">Docker</a>
+        <i class="fas fa-chevron-right"></i>
+        <span class="breadcrumb-item active">WordPress Compose</span>
+      </div>
+    </div>
+    <button class="btn btn-primary">
+      <i class="fas fa-plus"></i>
+      Créer une CloudMachine
+    </button>
   </div>
 
   <div class="filters-bar">
-      <div class="search-box">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Rechercher une VM...">
-      </div>
-      <div class="filters">
-          <select class="form-select">
-              <option value="">Statut</option>
-              <option value="running">En cours</option>
-              <option value="stopped">Arrêtée</option>
-              <option value="pending">En attente</option>
-          </select>
-          <select class="form-select">
-              <option value="">Types</option>
-              <option value="t2.micro">t2.micro</option>
-              <option value="t2.small">t2.small</option>
-              <option value="t2.medium">t2.medium</option>
-          </select>
-      </div>
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Rechercher une VM...">
+    </div>
+    <div class="filters">
+      <select class="form-select">
+        <option value="">Statut</option>
+        <option value="running">En cours</option>
+        <option value="stopped">Arrêtée</option>
+        <option value="pending">En attente</option>
+      </select>
+      <select class="form-select">
+        <option value="">Types</option>
+        <option value="t2.micro">t2.micro</option>
+        <option value="t2.small">t2.small</option>
+        <option value="t2.medium">t2.medium</option>
+      </select>
+    </div>
   </div>
 
-  <div class="vm-grid">
-
-      <div class="vm-card">
-          <div class="vm-header">
-              <div class="vm-status-badge status-running"></div>
-              <div class="vm-name">Production Server</div>
-              <div class="vm-id">vm-prod-01</div>
-          </div>
-          <div class="vm-details">
-              <div class="vm-info-grid">
-                  <span class="vm-label">Type:</span>
-                  <span class="vm-value">t2.medium</span>
-                  
-                  <span class="vm-label">Image:</span>
-                  <span class="vm-value">Ubuntu 20.04 LTS</span>
-                  
-                  <span class="vm-label">IP:</span>
-                  <span class="vm-value">172.16.0.10</span>
-                  
-                  <span class="vm-label">Stockage:</span>
-                  <span class="vm-value">50 GB</span>
-              </div>
-          </div>
-          <div class="vm-actions">
-              <button class="vm-btn btn-stop" title="Arrêter">
-                  <i class="fas fa-power-off"></i>
-              </button>
-              <button class="vm-btn btn-restart" title="Redémarrer">
-                  <i class="fas fa-sync"></i>
-              </button>
-              <button class="vm-btn" title="Modifier">
-                  <i class="fas fa-edit"></i>
-              </button>
-              <button class="vm-btn" title="Supprimer">
-                  <i class="fas fa-trash"></i>
-              </button>
-          </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">Production Server</h3>
+          <div class="card-subtitle">vm-prod-01</div>
+        </div>
+        <div class="status-badge status-active"></div>
       </div>
-
-      <div class="vm-card">
-          <div class="vm-header">
-              <div class="vm-status-badge status-stopped"></div>
-              <div class="vm-name">Development Server</div>
-              <div class="vm-id">vm-dev-01</div>
-          </div>
-          <div class="vm-details">
-              <div class="vm-info-grid">
-                  <span class="vm-label">Type:</span>
-                  <span class="vm-value">t2.micro</span>
-                  
-                  <span class="vm-label">Image:</span>
-                  <span class="vm-value">Debian 11</span>
-                  
-                  <span class="vm-label">IP:</span>
-                  <span class="vm-value">172.16.0.11</span>
-                  
-                  <span class="vm-label">Stockage:</span>
-                  <span class="vm-value">20 GB</span>
-              </div>
-          </div>
-          <div class="vm-actions">
-              <button class="vm-btn btn-start" title="Démarrer">
-                  <i class="fas fa-power-off"></i>
-              </button>
-              <button class="vm-btn" title="Modifier">
-                  <i class="fas fa-edit"></i>
-              </button>
-              <button class="vm-btn" title="Supprimer">
-                  <i class="fas fa-trash"></i>
-              </button>
-          </div>
+      <div class="card-content">
+        <div class="info-grid">
+          <span class="info-label">Type:</span>
+          <span class="info-value">t2.medium</span>
+          <span class="info-label">Image:</span>
+          <span class="info-value">Ubuntu 20.04 LTS</span>
+          <span class="info-label">IP:</span>
+          <span class="info-value">172.16.0.10</span>
+          <span class="info-label">Stockage:</span>
+          <span class="info-value">50 GB</span>
+        </div>
       </div>
+      <div class="card-actions">
+        <button class="action-btn btn-danger" title="Arrêter">
+          <i class="fas fa-power-off"></i>
+        </button>
+        <button class="action-btn btn-warning" title="Redémarrer">
+          <i class="fas fa-sync"></i>
+        </button>
+        <button class="action-btn" title="Modifier">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn" title="Supprimer">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">Development Server</h3>
+          <div class="card-subtitle">vm-dev-01</div>
+        </div>
+        <div class="status-badge status-inactive"></div>
+      </div>
+      <div class="card-content">
+        <div class="info-grid">
+          <span class="info-label">Type:</span>
+          <span class="info-value">t2.micro</span>
+          <span class="info-label">Image:</span>
+          <span class="info-value">Debian 11</span>
+          <span class="info-label">IP:</span>
+          <span class="info-value">172.16.0.11</span>
+          <span class="info-label">Stockage:</span>
+          <span class="info-value">20 GB</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="action-btn btn-success" title="Démarrer">
+          <i class="fas fa-power-off"></i>
+        </button>
+        <button class="action-btn" title="Modifier">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn" title="Supprimer">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
