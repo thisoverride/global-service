@@ -96,6 +96,7 @@ export default class ConsoleController {
 
       response.render("pages/Xrush", {
         styles: this.getStyleLink(this.STATIC_PATHS.styles.wpauto),
+        script : this.getScriptLink(this.STATIC_PATHS.script.cloudforge),
         menuServices,
         title : 'X-Rush',
         success: true
