@@ -1,5 +1,6 @@
 import { ServiceManager } from './services/ServiceManager.js'
 import { SidebarService } from './SidebarService.js'
+import { HostPicker } from './HostPicker.js'
 
 document.addEventListener('DOMContentLoaded', () => {
   const config = {
@@ -18,4 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebar: document.getElementById('sidebar'),
     toggle: document.getElementById('sidebarToggle'),
   });
+
+  new HostPicker();
 });

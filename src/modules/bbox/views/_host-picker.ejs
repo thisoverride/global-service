@@ -1,0 +1,34 @@
+<%
+  // Partagé par le formulaire de création et celui de modification.
+  // `selectedIp` vaut '' à la création.
+  const knownIps = hostOptions.map(h => h.ip);
+  const isKnown = selectedIp && knownIps.includes(selectedIp);
+  // Une IP déjà configurée mais absente de la liste (machine éteinte,
+  // adresse statique hors bail DHCP) doit rester modifiable : on bascule
+  // alors sur la saisie libre, pré-remplie.
+  const useCustom = Boolean(selectedIp) && !isKnown;
+%>
+<div class="form-group">
+  <label for="internalIp">Machine de destination</label>
+  <% if (hostOptions.length === 0) { %>
+    <input type="text" id="internalIp" name="internalIp" class="form-control" required
+           pattern="(\d{1,3}\.){3}\d{1,3}" placeholder="192.168.1.149"
+           value="<%= selectedIp || '' %>">
+    <p class="muted-note">
+      Liste des appareils indisponible (mot de passe de la box non configuré ou box injoignable) :
+      saisissez l'adresse IP directement.
+    </p>
+  <% } else { %>
+    <select id="internalIp" name="internalIp" class="form-select" required data-host-picker>
+      <% if (!selectedIp) { %><option value="">— Choisir une machine —</option><% } %>
+      <% hostOptions.forEach(h => { %>
+        <option value="<%= h.ip %>" <%= selectedIp === h.ip ? 'selected' : '' %>><%= h.label %></option>
+      <% }) %>
+      <option value="__other__" <%= useCustom ? 'selected' : '' %>>Autre adresse IP…</option>
+    </select>
+    <input type="text" name="internalIpCustom" class="form-control" data-host-custom
+           pattern="(\d{1,3}\.){3}\d{1,3}" placeholder="192.168.1.42"
+           style="margin-top: 0.5rem; <%= useCustom ? '' : 'display: none;' %>"
+           value="<%= useCustom ? selectedIp : '' %>">
+  <% } %>
+</div>

@@ -29,6 +29,10 @@ interface ParsedRule {
   internalIp: string;
 }
 
+// Marqueur de l'option « autre adresse » du menu deroulant : la valeur
+// reellement saisie arrive alors dans internalIpCustom.
+const OTHER_IP = "__other__";
+
 // Valide entierement la saisie avant tout appel a la box : une regle
 // incoherente y serait acceptee telle quelle et ouvrirait un port sans
 // que ce soit visible.
@@ -37,7 +41,9 @@ function parseRuleForm(body: Record<string, unknown>): ParsedRule | null {
   const protocol = String(body.protocol || "");
   const externalPort = Number(body.externalPort);
   const internalPort = Number(body.internalPort);
-  const internalIp = String(body.internalIp || "").trim();
+  const chosenIp = String(body.internalIp || "").trim();
+  const internalIp =
+    chosenIp === OTHER_IP ? String(body.internalIpCustom || "").trim() : chosenIp;
 
   const portOk = (p: number) => Number.isInteger(p) && p >= 1 && p <= 65535;
   const ipOk =
@@ -48,6 +54,29 @@ function parseRuleForm(body: Record<string, unknown>): ParsedRule | null {
     return null;
   }
   return { description, protocol, externalPort, internalPort, internalIp };
+}
+
+export interface HostOption {
+  ip: string;
+  label: string;
+}
+
+// Appareils proposes dans le menu deroulant de destination. Deduplique par
+// IP (la box garde en memoire des appareils vus plusieurs fois), actifs en
+// premier. Renvoie une liste vide si la box est injoignable ou le mot de
+// passe absent : le formulaire retombe alors sur une saisie libre.
+async function loadHostOptions(pool: Pool): Promise<HostOption[]> {
+  try {
+    const hosts = await listHosts(pool);
+    const byIp = new Map<string, HostOption>();
+    for (const h of hosts) {
+      if (!h.ip || byIp.has(h.ip)) continue;
+      byIp.set(h.ip, { ip: h.ip, label: `${h.hostname} — ${h.ip}${h.active ? "" : " (hors ligne)"}` });
+    }
+    return [...byIp.values()];
+  } catch {
+    return [];
+  }
 }
 
 export function buildRouter(pool: Pool): Router {
@@ -111,8 +140,8 @@ export function buildRouter(pool: Pool): Router {
 
   router.get("/nat", async (req, res, next) => {
     try {
-      const rules = await listNatRules();
-      res.render("bbox-nat", { rules, ...flash(req) });
+      const [rules, hostOptions] = await Promise.all([listNatRules(), loadHostOptions(pool)]);
+      res.render("bbox-nat", { rules, hostOptions, ...flash(req) });
     } catch (error) {
       next(error);
     }
@@ -139,12 +168,12 @@ export function buildRouter(pool: Pool): Router {
       return;
     }
     try {
-      const rule = await getNatRule(id);
+      const [rule, hostOptions] = await Promise.all([getNatRule(id), loadHostOptions(pool)]);
       if (!rule) {
         res.redirect("/modules/bbox/nat?error=" + encodeURIComponent("Redirection introuvable."));
         return;
       }
-      res.render("bbox-nat-edit", { rule, error: null });
+      res.render("bbox-nat-edit", { rule, hostOptions, error: null });
     } catch (error) {
       next(error);
     }
@@ -158,9 +187,13 @@ export function buildRouter(pool: Pool): Router {
     }
     const parsed = parseRuleForm(req.body);
     if (!parsed) {
-      const current = await getNatRule(id).catch(() => null);
+      const [current, hostOptions] = await Promise.all([
+        getNatRule(id).catch(() => null),
+        loadHostOptions(pool),
+      ]);
       res.status(400).render("bbox-nat-edit", {
         rule: current ?? { id, description: "", protocol: "tcp", externalPort: "", internalPort: "", internalIp: "", enabled: true },
+        hostOptions,
         error: "Redirection invalide : vérifiez les ports et l'IP.",
       });
       return;
