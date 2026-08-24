@@ -1,0 +1,21 @@
+<section>
+  <h1>Plex — jeton</h1>
+  <div class="card">
+    <div class="card-body">
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+      <p><%= hasToken ? "Un jeton est déjà enregistré. Le remplacer :" : "Aucun jeton enregistré." %></p>
+      <form method="POST" action="/modules/plex/settings">
+        <div class="form-group">
+          <label for="token">Jeton Plex</label>
+          <input type="password" id="token" name="token" class="form-control" required autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-primary">Vérifier et enregistrer</button>
+      </form>
+      <p class="muted-note">
+        Le jeton se récupère dans l'interface Plex : ouvrez un média, « Obtenir les infos »,
+        puis « Afficher le XML » — il apparaît en fin d'URL sous <code>X-Plex-Token</code>.
+        Il est vérifié auprès du serveur avant d'être enregistré, et jamais réaffiché.
+      </p>
+    </div>
+  </div>
+</section>
