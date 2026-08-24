@@ -5,20 +5,18 @@
     <span class="sidebar-title sidebar-label"><%= activeModule.name %></span>
   </div>
 
-  <nav class="sidebar-nav">
-    <% if (activeModule.links.length === 0) { %>
-      <a href="<%= activeModule.url %>" class="sidebar-item is-active" title="<%= activeModule.name %>">
-        <span class="sidebar-label"><%= activeModule.name %></span>
-      </a>
-    <% } else { %>
+  <%# Un module d'une seule page n'a pas de sections : l'en-tête le nomme
+      déjà, répéter son nom en dessous n'apprendrait rien. %>
+  <% if (activeModule.links.length > 0) { %>
+    <nav class="sidebar-nav">
       <% activeModule.links.forEach(link => { %>
         <a href="<%= link.url %>" class="sidebar-item <%= currentPath === link.url ? 'is-active' : '' %>"
            title="<%= link.label %>">
           <span class="sidebar-label"><%= link.label %></span>
         </a>
       <% }) %>
-    <% } %>
-  </nav>
+    </nav>
+  <% } %>
 
   <button type="button" class="sidebar-toggle" id="sidebarToggle"
           aria-label="Replier ou déplier le menu" aria-expanded="true">

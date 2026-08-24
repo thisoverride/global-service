@@ -1,0 +1,57 @@
+<section>
+  <h1>Applications</h1>
+
+  <h2 class="category-title">Accessibles par domaine</h2>
+  <% if (byDomain.length === 0) { %>
+    <div class="card"><div class="empty-state"><p>Aucune application publiée sur un domaine.</p></div></div>
+  <% } else { %>
+    <div class="tiles-grid">
+      <% byDomain.forEach(app => { %>
+        <a href="<%= app.url %>" class="service-tile" target="_blank" rel="noopener noreferrer">
+          <div class="service-tile-icon"><i class="fas fa-globe" aria-hidden="true"></i></div>
+          <div class="service-tile-info">
+            <span class="service-tile-name">
+              <%= app.name %>
+              <i class="fas fa-arrow-up-right-from-square tile-external" aria-hidden="true"></i>
+            </span>
+            <span class="service-tile-description"><%= app.detail %></span>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <h2 class="category-title">Accessibles par port, sur le réseau local</h2>
+  <% if (!lanHostConfigured) { %>
+    <div class="card">
+      <div class="card-body">
+        <p class="muted-note">
+          Ces services ne passent pas par le proxy : leur adresse dépend de l'IP du serveur
+          sur votre réseau. Définissez la variable <code>APPS_LAN_HOST</code> (par exemple
+          <code>192.168.1.149</code>) pour les faire apparaître ici.
+        </p>
+      </div>
+    </div>
+  <% } else if (byPort.length === 0) { %>
+    <div class="card"><div class="empty-state"><p>Aucun service publié sur un port.</p></div></div>
+  <% } else { %>
+    <div class="tiles-grid">
+      <% byPort.forEach(app => { %>
+        <a href="<%= app.url %>" class="service-tile" target="_blank" rel="noopener noreferrer">
+          <div class="service-tile-icon"><i class="fas fa-network-wired" aria-hidden="true"></i></div>
+          <div class="service-tile-info">
+            <span class="service-tile-name">
+              <%= app.name %>
+              <i class="fas fa-arrow-up-right-from-square tile-external" aria-hidden="true"></i>
+            </span>
+            <span class="service-tile-description"><%= app.detail %></span>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+    <p class="muted-note">
+      Ces adresses ne sont joignables que depuis le réseau local ou le VPN : ces ports
+      ne sont pas ouverts sur internet.
+    </p>
+  <% } %>
+</section>

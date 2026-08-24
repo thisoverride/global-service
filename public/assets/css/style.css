@@ -312,6 +312,14 @@ p:last-child {
   color: var(--text-dark);
 }
 
+/* Petite flèche indiquant que le lien s'ouvre dans un nouvel onglet. */
+.tile-external {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  margin-left: 0.3rem;
+  vertical-align: 1px;
+}
+
 .service-tile-description {
   font-size: 0.8rem;
   color: var(--text-light);
@@ -319,6 +327,9 @@ p:last-child {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  /* Un domaine long sans espace (…sslip.io) déborderait de la tuile au lieu
+     de passer à la ligne. */
+  overflow-wrap: anywhere;
 }
 
 .muted-note {
