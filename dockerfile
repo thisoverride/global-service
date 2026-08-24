@@ -3,7 +3,11 @@ FROM node:22-slim AS builder
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+# --include=dev : Coolify injecte les variables d'environnement de l'app (dont
+# NODE_ENV=production) au moment du build, ce qui ferait sinon sauter les
+# devDependencies (typescript/tsc) sans qu'on le voie tant qu'on ne teste pas
+# le vrai build en conditions reelles.
+RUN npm ci --include=dev
 COPY tsconfig.json ./
 COPY src/ ./src/
 RUN npm run build
