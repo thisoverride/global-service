@@ -1,0 +1,77 @@
+<%
+  const labels = {
+    ok:      ['Dernière sauvegarde réussie', 'alert-success'],
+    failed:  ['La dernière sauvegarde a ÉCHOUÉ', 'alert-danger'],
+    stale:   ['Aucune sauvegarde récente', 'alert-danger'],
+    unknown: ['État inconnu', 'alert-danger'],
+  };
+  const [title, cls] = labels[health];
+  function age(h) {
+    if (h === null) return '—';
+    if (h < 1) return 'il y a moins d\'une heure';
+    if (h < 48) return `il y a ${Math.round(h)} h`;
+    return `il y a ${Math.round(h / 24)} jours`;
+  }
+%>
+<section>
+  <h1>Sauvegardes</h1>
+
+  <div class="alert <%= cls %>">
+    <strong><%= title %></strong>
+    <% if (status) { %> — <%= age(ageHours) %><% } %>
+  </div>
+
+  <% if (problem) { %>
+    <div class="card"><div class="card-body"><p class="muted-note"><%= problem %></p></div></div>
+  <% } else { %>
+    <div class="dashboard-grid dashboard-grid--wide">
+      <div class="stat-card">
+        <h3>Terminée le</h3>
+        <div class="stat-value stat-value--text">
+          <%= new Date(status.finishedAt).toLocaleString('fr-FR') %>
+        </div>
+      </div>
+      <div class="stat-card">
+        <h3>Taille</h3>
+        <div class="stat-value stat-value--text"><%= status.size || '—' %></div>
+      </div>
+      <div class="stat-card">
+        <h3>Code de sortie</h3>
+        <div class="stat-value"><%= status.exitCode %></div>
+      </div>
+    </div>
+
+    <% if (status.failures && status.failures.length > 0) { %>
+      <div class="card">
+        <div class="card-header"><h2>Raisons de l'échec</h2></div>
+        <div class="table-container">
+          <table>
+            <tbody>
+              <% status.failures.forEach(f => { %>
+                <tr><td class="cell-break"><%= f %></td></tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="card">
+      <div class="card-header"><h2>Détails</h2></div>
+      <div class="table-container">
+        <table>
+          <tbody>
+            <tr><th>Destination</th><td class="cell-break"><%= status.destination %></td></tr>
+            <tr><th>Journal</th><td class="cell-break"><%= status.log %></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% } %>
+
+  <p class="muted-note">
+    La sauvegarde tourne chaque nuit à 03:00 et conserve 7 jours.
+    Cette page signale un échec, mais aussi l'absence de sauvegarde récente —
+    les 21 et 22 août 2026, le partage réseau n'était pas monté et rien ne l'avait signalé.
+  </p>
+</section>
