@@ -1,0 +1,29 @@
+<section>
+  <h1>Bbox — configuration</h1>
+  <a href="/modules/bbox" class="btn btn-secondary" style="margin-bottom: 1rem;">← Retour</a>
+
+  <div class="card">
+    <div class="card-body">
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+      <p>
+        <%= hasPassword
+          ? "Un mot de passe est déjà enregistré. Le remplacer :"
+          : "Aucun mot de passe enregistré. Il est nécessaire pour voir les appareils connectés et modifier les redirections." %>
+      </p>
+      <form method="POST" action="/modules/bbox/settings">
+        <div class="form-group">
+          <label for="password">Mot de passe d'administration de la Bbox</label>
+          <input type="password" id="password" name="password" class="form-control" required
+                 autocomplete="off" placeholder="Celui de l'interface mabbox.bytel.fr">
+        </div>
+        <button type="submit" class="btn btn-primary">Vérifier et enregistrer</button>
+      </form>
+      <p class="muted-note">
+        Le mot de passe est vérifié auprès de la box avant d'être enregistré, puis stocké
+        dans la base de la console. Il n'est jamais réaffiché.
+      </p>
+    </div>
+  </div>
+</section>

@@ -78,6 +78,12 @@ p:last-child {
   margin-bottom: 2rem;
 }
 
+/* Cartes plus larges quand la valeur est du texte (IP, version) et non un
+   compteur : sinon la valeur se coupe en plein milieu. */
+.dashboard-grid--wide {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 250px));
+}
+
 .stat-card {
   background: white;
   border: 1px solid var(--border-color);
@@ -97,6 +103,13 @@ p:last-child {
   font-size: 2rem;
   font-weight: 700;
   color: var(--text-dark);
+}
+
+/* Valeur textuelle (IP, modele, version) plutot qu'un simple nombre :
+   la taille d'un compteur la ferait deborder de la carte. */
+.stat-value--text {
+  font-size: 1.15rem;
+  overflow-wrap: break-word;
 }
 
 .category-title {
