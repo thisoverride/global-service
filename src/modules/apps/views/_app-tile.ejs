@@ -1,0 +1,20 @@
+<a href="<%= app.url %>" class="service-tile" target="_blank" rel="noopener noreferrer">
+  <% if (app.icon.faClass) { %>
+    <div class="service-tile-icon app-icon" style="background: <%= app.icon.color %>">
+      <i class="fas <%= app.icon.faClass %>" aria-hidden="true"></i>
+    </div>
+  <% } else { %>
+    <%# Pas de logiciel reconnu : pastille à l'initiale, couleur stable
+        déduite du nom, pour rester distinguable des voisines. %>
+    <div class="service-tile-icon app-icon" style="background: <%= app.icon.color %>">
+      <span class="app-initial"><%= app.icon.initial %></span>
+    </div>
+  <% } %>
+  <div class="service-tile-info">
+    <span class="service-tile-name">
+      <%= app.name %>
+      <i class="fas fa-arrow-up-right-from-square tile-external" aria-hidden="true"></i>
+    </span>
+    <span class="service-tile-description"><%= app.detail %></span>
+  </div>
+</a>

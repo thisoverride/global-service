@@ -312,6 +312,23 @@ p:last-child {
   color: var(--text-dark);
 }
 
+/* Pastille d'application : fond coloré posé en style inline, contenu blanc
+   (icône ou initiale). */
+.app-icon {
+  background: var(--aws-blue);
+  color: white;
+}
+
+.app-icon i {
+  font-size: 20px;
+}
+
+.app-initial {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
 /* Petite flèche indiquant que le lien s'ouvre dans un nouvel onglet. */
 .tile-external {
   font-size: 0.7rem;

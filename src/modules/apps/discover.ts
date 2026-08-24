@@ -1,4 +1,5 @@
 import Docker from "dockerode";
+import { AppIcon, iconFor } from "./icons";
 
 // Réutilise le socket Docker déjà monté pour le module Logs.
 const docker = new Docker({ socketPath: process.env.DOCKER_SOCKET || "/var/run/docker.sock" });
@@ -14,6 +15,7 @@ export interface AppEntry {
   url: string;
   detail: string;
   running: boolean;
+  icon: AppIcon;
 }
 
 export interface Discovered {
@@ -59,6 +61,7 @@ export async function discover(): Promise<Discovered> {
     const labels = c.Labels || {};
     const display = friendlyName(labels, name);
     const running = c.State === "running";
+    const icon = iconFor(display, c.Image || "");
 
     // 1) Domaines déclarés au reverse proxy — ce sont les vraies apps web.
     const domains = new Set<string>();
@@ -67,7 +70,7 @@ export async function discover(): Promise<Discovered> {
       for (const m of value.matchAll(HOST_RULE)) domains.add(m[1]);
     }
     for (const domain of domains) {
-      byDomain.push({ name: display, url: `https://${domain}`, detail: domain, running });
+      byDomain.push({ name: display, url: `https://${domain}`, detail: domain, running, icon });
     }
 
     // 2) Ports publiés sur l'hôte, pour les services hors proxy.
@@ -82,6 +85,7 @@ export async function discover(): Promise<Discovered> {
           url: `http://${LAN_HOST}:${p.PublicPort}`,
           detail: `port ${p.PublicPort}`,
           running,
+          icon,
         });
       }
     }

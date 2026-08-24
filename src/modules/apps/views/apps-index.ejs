@@ -7,16 +7,7 @@
   <% } else { %>
     <div class="tiles-grid">
       <% byDomain.forEach(app => { %>
-        <a href="<%= app.url %>" class="service-tile" target="_blank" rel="noopener noreferrer">
-          <div class="service-tile-icon"><i class="fas fa-globe" aria-hidden="true"></i></div>
-          <div class="service-tile-info">
-            <span class="service-tile-name">
-              <%= app.name %>
-              <i class="fas fa-arrow-up-right-from-square tile-external" aria-hidden="true"></i>
-            </span>
-            <span class="service-tile-description"><%= app.detail %></span>
-          </div>
-        </a>
+        <%- include('_app-tile', { app }) %>
       <% }) %>
     </div>
   <% } %>
@@ -37,16 +28,7 @@
   <% } else { %>
     <div class="tiles-grid">
       <% byPort.forEach(app => { %>
-        <a href="<%= app.url %>" class="service-tile" target="_blank" rel="noopener noreferrer">
-          <div class="service-tile-icon"><i class="fas fa-network-wired" aria-hidden="true"></i></div>
-          <div class="service-tile-info">
-            <span class="service-tile-name">
-              <%= app.name %>
-              <i class="fas fa-arrow-up-right-from-square tile-external" aria-hidden="true"></i>
-            </span>
-            <span class="service-tile-description"><%= app.detail %></span>
-          </div>
-        </a>
+        <%- include('_app-tile', { app }) %>
       <% }) %>
     </div>
     <p class="muted-note">
