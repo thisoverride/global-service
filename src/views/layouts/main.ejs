@@ -13,9 +13,13 @@
 <body>
   <%- include('../partials/nav') %>
 
-  <main id="root" class="main-content">
-    <%- body %>
-  </main>
+  <div class="shell">
+    <%- include('../partials/sidebar') %>
+
+    <main id="root" class="main-content">
+      <%- body %>
+    </main>
+  </div>
 
   <script type="module" src="/assets/js/main.js"></script>
   <%- typeof script !=='undefined' ? script : '' %>

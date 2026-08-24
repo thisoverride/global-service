@@ -52,6 +52,9 @@ export default class ExpressApplication {
     // qu'aucun module n'ait besoin d'y penser.
     this.app.use((req, res, next) => {
       res.locals.menuServices = { services: this.moduleLoader.getNavGroups() };
+      res.locals.activeModule = this.moduleLoader.getActiveModule(req.path);
+      // Sert a marquer l'entree active dans la barre laterale.
+      res.locals.currentPath = req.path;
       res.locals.currentUser = req.session.username;
       next();
     });

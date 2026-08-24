@@ -30,123 +30,22 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      <h2>Appareils connectés</h2>
-      <a href="/modules/bbox/settings" class="btn btn-secondary">Mot de passe</a>
-    </div>
-    <% if (hostsError) { %>
-      <div class="empty-state">
-        <p><%= hostsError %></p>
-        <a href="/modules/bbox/settings" class="btn btn-primary">Configurer le mot de passe</a>
+  <div class="tiles-grid">
+    <a href="/modules/bbox/hosts" class="service-tile">
+      <div class="service-tile-icon"><i class="fas fa-laptop" aria-hidden="true"></i></div>
+      <div class="service-tile-info">
+        <span class="service-tile-name">Appareils connectés</span>
+        <span class="service-tile-description">
+          <%= hostCount === null ? 'Mot de passe requis' : hostCount + ' appareil(s) en ligne' %>
+        </span>
       </div>
-    <% } else if (hosts.length === 0) { %>
-      <div class="empty-state"><p>Aucun appareil connu.</p></div>
-    <% } else { %>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr><th>Nom</th><th>Adresse IP</th><th>Adresse MAC</th><th>Lien</th><th>État</th></tr>
-          </thead>
-          <tbody>
-            <% hosts.forEach(h => { %>
-              <tr>
-                <td><%= h.hostname %></td>
-                <td><%= h.ip %></td>
-                <td class="cell-break"><%= h.mac %></td>
-                <td><%= h.linkType %></td>
-                <td><span class="badge <%= h.active ? 'badge-success' : '' %>"><%= h.active ? 'connecté' : 'hors ligne' %></span></td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
+    </a>
+    <a href="/modules/bbox/nat" class="service-tile">
+      <div class="service-tile-icon"><i class="fas fa-right-left" aria-hidden="true"></i></div>
+      <div class="service-tile-info">
+        <span class="service-tile-name">Redirections de ports</span>
+        <span class="service-tile-description"><%= ruleCount %> règle(s) configurée(s)</span>
       </div>
-    <% } %>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><h2>Redirections de ports</h2></div>
-    <% if (rules.length === 0) { %>
-      <div class="empty-state"><p>Aucune redirection configurée.</p></div>
-    <% } else { %>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr><th>Description</th><th>Protocole</th><th>Port externe</th><th>Vers</th><th>État</th><th></th></tr>
-          </thead>
-          <tbody>
-            <% rules.forEach(r => { %>
-              <tr>
-                <td><%= r.description %></td>
-                <td><%= r.protocol.toUpperCase() %></td>
-                <td><%= r.externalPort %></td>
-                <td><%= r.internalIp %>:<%= r.internalPort %></td>
-                <td><span class="badge <%= r.enabled ? 'badge-success' : '' %>"><%= r.enabled ? 'active' : 'désactivée' %></span></td>
-                <td>
-                  <form method="POST" action="/modules/bbox/nat/<%= r.id %>/delete" style="display:inline"
-                        class="nat-delete" data-description="<%= r.description %>" data-port="<%= r.externalPort %>">
-                    <button type="submit" class="btn btn-secondary">Supprimer</button>
-                  </form>
-                </td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-    <% } %>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><h2>Ajouter une redirection</h2></div>
-    <div class="card-body">
-      <form method="POST" action="/modules/bbox/nat">
-        <div class="form-group">
-          <label for="description">Description</label>
-          <input type="text" id="description" name="description" class="form-control" required placeholder="ex: Serveur de jeu">
-        </div>
-        <div class="form-group">
-          <label for="protocol">Protocole</label>
-          <select id="protocol" name="protocol" class="form-select" required>
-            <option value="tcp">TCP</option>
-            <option value="udp">UDP</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="externalPort">Port externe (vu depuis internet)</label>
-          <input type="number" id="externalPort" name="externalPort" class="form-control" min="1" max="65535" required>
-        </div>
-        <div class="form-group">
-          <label for="internalIp">Machine de destination (IP locale)</label>
-          <input type="text" id="internalIp" name="internalIp" class="form-control" required
-                 pattern="(\d{1,3}\.){3}\d{1,3}" placeholder="192.168.1.149" value="192.168.1.149">
-        </div>
-        <div class="form-group">
-          <label for="internalPort">Port sur cette machine</label>
-          <input type="number" id="internalPort" name="internalPort" class="form-control" min="1" max="65535" required>
-        </div>
-        <p class="muted-note">
-          Une redirection ouvre ce port depuis internet vers la machine indiquée.
-          N'exposez que des services que vous voulez réellement rendre publics.
-        </p>
-        <button type="submit" class="btn btn-primary">Ajouter la redirection</button>
-      </form>
-    </div>
+    </a>
   </div>
 </section>
-
-<script>
-  // La confirmation est branchée ici plutôt qu'en onsubmit="" : une
-  // description contenant une apostrophe casserait la chaîne JS une fois
-  // l'entité HTML décodée par le navigateur.
-  document.querySelectorAll('form.nat-delete').forEach((form) => {
-    form.addEventListener('submit', (event) => {
-      const description = form.dataset.description;
-      const port = form.dataset.port;
-      const ok = confirm(
-        'Supprimer la redirection « ' + description + ' » (port ' + port + ') ?\n\n' +
-        'Le service concerné ne sera plus joignable depuis internet.',
-      );
-      if (!ok) event.preventDefault();
-    });
-  });
-</script>

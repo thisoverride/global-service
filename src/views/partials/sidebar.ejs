@@ -1,0 +1,29 @@
+<% if (activeModule) { %>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <span class="sidebar-icon"><%- activeModule.icon %></span>
+    <span class="sidebar-title sidebar-label"><%= activeModule.name %></span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <% if (activeModule.links.length === 0) { %>
+      <a href="<%= activeModule.url %>" class="sidebar-item is-active" title="<%= activeModule.name %>">
+        <span class="sidebar-label"><%= activeModule.name %></span>
+      </a>
+    <% } else { %>
+      <% activeModule.links.forEach(link => { %>
+        <a href="<%= link.url %>" class="sidebar-item <%= currentPath === link.url ? 'is-active' : '' %>"
+           title="<%= link.label %>">
+          <span class="sidebar-label"><%= link.label %></span>
+        </a>
+      <% }) %>
+    <% } %>
+  </nav>
+
+  <button type="button" class="sidebar-toggle" id="sidebarToggle"
+          aria-label="Replier ou déplier le menu" aria-expanded="true">
+    <i class="fas fa-angles-left" aria-hidden="true"></i>
+    <span class="sidebar-label">Replier</span>
+  </button>
+</aside>
+<% } %>

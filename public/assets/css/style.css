@@ -50,25 +50,161 @@ p:last-child {
   margin-bottom: 0;
 }
 
-/* Contenu principal */
-.main-content {
-  flex: 1;
-  width: 100%;
-  max-width: 1160px;
-  margin: var(--top-nav-height) auto 0;
-  padding: 2rem;
-  min-height: calc(100vh - var(--top-nav-height));
-}
-.dsn {
-  display: none;
-}
-.noside{
-  margin-left: 0;
-}
-.wrapper {
+/* Charpente : barre latérale + contenu */
+.shell {
   display: flex;
   flex: 1;
   margin-top: var(--top-nav-height);
+  min-height: calc(100vh - var(--top-nav-height));
+}
+
+.main-content {
+  flex: 1;
+  /* min-width: 0 est indispensable dans un conteneur flex : sans lui, un
+     tableau large pousse le contenu au-delà de la fenêtre au lieu de
+     déclencher son propre défilement. */
+  min-width: 0;
+  padding: 2rem;
+}
+
+.main-content > * {
+  max-width: 1160px;
+}
+
+/* Barre latérale */
+.sidebar {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  background: white;
+  border-right: 1px solid var(--border-color);
+  padding: 0.75rem 0 0;
+  transition: width 0.15s ease;
+  position: sticky;
+  top: var(--top-nav-height);
+  align-self: flex-start;
+  height: calc(100vh - var(--top-nav-height));
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar.is-collapsed {
+  width: 52px;
+}
+
+/* Replié : la barre se réduit à une bande — icône du module et bouton pour
+   la rouvrir. Les sections sont du texte, elles n'auraient aucun sens
+   tronquées à 52 px. */
+.sidebar.is-collapsed .sidebar-label,
+.sidebar.is-collapsed .sidebar-nav {
+  display: none;
+}
+
+.sidebar.is-collapsed .sidebar-head {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar.is-collapsed .sidebar-toggle {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-top: auto;
+  border: none;
+  border-top: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-light);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+  color: var(--text-dark);
+  background: var(--bg-light);
+}
+
+.sidebar.is-collapsed .sidebar-toggle i {
+  transform: rotate(180deg);
+}
+
+/* En-tête : rappelle dans quel module on se trouve. */
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem 0.85rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.sidebar-nav {
+  flex: 1;
+}
+
+.sidebar-item {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-size: 0.875rem;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-item:hover {
+  background: var(--bg-light);
+}
+
+.sidebar-item.is-active {
+  background: #fff6e8;
+  border-left-color: var(--aws-orange);
+  font-weight: 600;
+}
+
+.sidebar-icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--aws-blue);
+}
+
+.sidebar-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 52px;
+  }
+  .sidebar .sidebar-label,
+  .sidebar .sidebar-nav {
+    display: none;
+  }
+  .sidebar .sidebar-head,
+  .sidebar .sidebar-toggle {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 /* Tableau de bord */
 .dashboard-grid {
@@ -436,6 +572,14 @@ th {
    etirer toute la ligne. */
 .cell-break {
   word-break: break-all;
+}
+
+/* Plusieurs boutons dans une cellule : ils restent sur une ligne tant que
+   la place le permet, et passent à la ligne proprement sinon. */
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 /* Media Queries globales */

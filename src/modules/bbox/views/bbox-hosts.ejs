@@ -1,0 +1,39 @@
+<section>
+  <h1>Appareils connectés</h1>
+
+  <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><%= hosts.filter(h => h.active).length %> en ligne sur <%= hosts.length %> connus</h2>
+    </div>
+    <% if (hostsError) { %>
+      <div class="empty-state">
+        <p><%= hostsError %></p>
+        <a href="/modules/bbox/settings" class="btn btn-primary">Configurer le mot de passe</a>
+      </div>
+    <% } else if (hosts.length === 0) { %>
+      <div class="empty-state"><p>Aucun appareil connu.</p></div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>Nom</th><th>Adresse IP</th><th>Adresse MAC</th><th>Lien</th><th>État</th></tr>
+          </thead>
+          <tbody>
+            <% hosts.forEach(h => { %>
+              <tr>
+                <td><%= h.hostname %></td>
+                <td><%= h.ip %></td>
+                <td class="cell-break"><%= h.mac %></td>
+                <td><%= h.linkType %></td>
+                <td><span class="badge <%= h.active ? 'badge-success' : '' %>"><%= h.active ? 'connecté' : 'hors ligne' %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</section>

@@ -15,6 +15,20 @@ export interface CategoryGroup {
   items: NavItem[];
 }
 
+export interface SidebarLink {
+  label: string;
+  url: string;
+}
+
+export interface SidebarEntry {
+  id: string;
+  name: string;
+  icon: string;
+  url: string;
+  links: SidebarLink[];
+}
+
+
 export interface NavItem {
   id: string;
   name: string;
@@ -119,6 +133,29 @@ export class ModuleLoader {
     return [...byCategory.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([category, items]) => ({ category, items }));
+  }
+
+  // Le module dont on consulte une page, d'apres l'URL courante — la barre
+  // laterale n'affiche que ses sections, jamais celles des autres (la
+  // navigation entre modules passe par le panneau "Services" du haut).
+  // Renvoie null sur les pages du coeur, ou le module n'a pas lieu d'etre.
+  public getActiveModule(path: string): SidebarEntry | null {
+    const found = this.loaded.find(
+      (m) => path === m.manifest.basePath || path.startsWith(m.manifest.basePath + "/"),
+    );
+    if (!found) return null;
+
+    const { id, name, icon, basePath, links } = found.manifest;
+    return {
+      id,
+      name,
+      icon,
+      url: basePath,
+      links: (links ?? []).map((l) => ({
+        label: l.label,
+        url: l.path ? `${basePath}/${l.path}`.replace(/\/+/g, "/") : basePath,
+      })),
+    };
   }
 
   public getModuleCount(): number {

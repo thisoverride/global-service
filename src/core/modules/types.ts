@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { Pool } from 'pg';
 
+export interface ModuleLink {
+  label: string;
+  // Chemin relatif au basePath du module ('' pour la page d'accueil du module).
+  path: string;
+}
+
 export interface ModuleManifest {
   id: string;            // identifiant stable, utilise pour les migrations/reglages ('cloudflare')
   name: string;           // nom affiche ('Cloudflare')
@@ -8,6 +14,9 @@ export interface ModuleManifest {
   icon: string;            // SVG inline (meme format que l'ancien services.json)
   category: string;        // groupe d'affichage dans le panneau de services
   basePath: string;        // prefixe de route, ex: '/modules/cloudflare'
+  // Sections du module listees dans la barre laterale. Un module qui n'en
+  // declare pas apparait comme une entree unique.
+  links?: ModuleLink[];
 }
 
 // Contrat minimal qu'un module doit remplir. Tout le reste (comment le
