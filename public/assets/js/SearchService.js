@@ -65,7 +65,7 @@ export class SearchService {
 
   getSuggestionHTML(suggestion, searchText) {
     return `
-      <i class="fas ${suggestion.icon} suggestion-icon"></i>
+      <i class="fas fa-puzzle-piece suggestion-icon"></i>
       <div class="suggestion-content">
         <div class="suggestion-title">${this.highlightText(suggestion.title, searchText)}</div>
         <div class="suggestion-description">${this.highlightText(suggestion.description, searchText)}</div>
@@ -77,7 +77,7 @@ export class SearchService {
   handleSuggestionClick(suggestion) {
     this.input.value = suggestion.title;
     this.container.classList.remove('active');
-    window.location.href = suggestion.path || `/${suggestion.title.toLowerCase().replace(/\s+/g, '')}`;
+    window.location.href = suggestion.path;
   }
 
   setupEventListeners() {

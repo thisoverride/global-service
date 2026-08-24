@@ -1,0 +1,21 @@
+<section>
+  <h1>Cloudflare — configuration</h1>
+  <div class="card">
+    <div class="card-body">
+      <% if (error) { %>
+        <p style="color: var(--danger);"><%= error %></p>
+      <% } %>
+      <p>
+        <%= hasToken ? "Un jeton API est déjà enregistré. Le remplacer :" : "Aucun jeton API enregistré." %>
+      </p>
+      <form method="POST" action="/modules/cloudflare/settings">
+        <div class="form-group">
+          <label for="apiToken">Jeton API Cloudflare</label>
+          <input type="password" id="apiToken" name="apiToken" class="form-control" required
+                 placeholder="Jeton avec droits DNS:Edit sur les zones concernées">
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </form>
+    </div>
+  </div>
+</section>

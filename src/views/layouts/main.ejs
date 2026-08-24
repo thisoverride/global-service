@@ -4,55 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Console de Gestion des Emails</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <title>Console</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-    <%- typeof styles !=='undefined' ? styles : '' %>
+  <%- typeof styles !=='undefined' ? styles : '' %>
 </head>
 
 <body>
-  <!-- Navigation principale -->
   <%- include('../partials/nav') %>
 
-  <!-- Panneau des services -->
-
-  <!-- Sidebar principale -->
-  <div class="wrapper">
-
-    <aside class="sidebar">
-      <nav class="nav-menu">
-        <a href="#dashboard" class="nav-item">
-          <i class="fas fa-home"></i>
-          <span>Tableau de bord</span>
-        </a>
-        <a href="#applications" class="nav-item">
-          <i class="fas fa-th-large"></i>
-          <span>Applications</span>
-        </a>
-        <a href="#templates" class="nav-item">
-          <i class="fas fa-envelope"></i>
-          <span>Modèles</span>
-        </a>
-        <a href="#security" class="nav-item">
-          <i class="fas fa-shield-alt"></i>
-          <span>Sécurité</span>
-        </a>
-        <a href="#monitoring" class="nav-item">
-          <i class="fas fa-chart-line"></i>
-          <span>Surveillance</span>
-        </a>
-      </nav>
-    </aside>
-  </div>
-
-  <!-- Contenu principal -->
   <main id="root" class="main-content">
     <%- body %>
   </main>
+
   <script type="module" src="/assets/js/main.js"></script>
   <%- typeof script !=='undefined' ? script : '' %>
-
-
 </body>
 
 </html>

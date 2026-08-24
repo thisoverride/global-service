@@ -1,0 +1,51 @@
+<section>
+  <h1>QEMU — nouvelle VM</h1>
+  <a href="/modules/qemu" class="btn btn-secondary" style="margin-bottom: 1rem;">← Toutes les VM</a>
+
+  <div class="card">
+    <div class="card-body">
+      <% if (error) { %>
+        <p style="color: var(--danger);"><%= error %></p>
+      <% } %>
+      <form method="POST" action="/modules/qemu/new">
+        <div class="form-group">
+          <label for="name">Nom de la VM</label>
+          <input type="text" id="name" name="name" class="form-control" required
+                 pattern="[a-z][a-z0-9-]{1,30}" title="Lettres minuscules, chiffres et tirets, commence par une lettre"
+                 value="<%= values.name || '' %>" placeholder="ex: test-web-01">
+        </div>
+        <div class="form-group">
+          <label for="baseImageId">Image de base</label>
+          <select id="baseImageId" name="baseImageId" class="form-select" required>
+            <% catalog.forEach(img => { %>
+              <option value="<%= img.id %>" <%= values.baseImageId === img.id ? 'selected' : '' %>><%= img.name %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="vcpus">vCPU</label>
+          <input type="number" id="vcpus" name="vcpus" class="form-control" min="1" max="16" value="<%= values.vcpus || 1 %>">
+        </div>
+        <div class="form-group">
+          <label for="memoryMiB">Mémoire (Mo)</label>
+          <input type="number" id="memoryMiB" name="memoryMiB" class="form-control" min="256" step="256" value="<%= values.memoryMiB || 1024 %>">
+        </div>
+        <div class="form-group">
+          <label for="diskSizeGiB">Disque (Go)</label>
+          <input type="number" id="diskSizeGiB" name="diskSizeGiB" class="form-control" min="4" value="<%= values.diskSizeGiB || 10 %>">
+        </div>
+        <div class="form-group">
+          <label for="sshUsername">Nom d'utilisateur (créé par cloud-init)</label>
+          <input type="text" id="sshUsername" name="sshUsername" class="form-control" required value="<%= values.sshUsername || '' %>">
+        </div>
+        <div class="form-group">
+          <label for="sshPublicKey">Clé SSH publique</label>
+          <textarea id="sshPublicKey" name="sshPublicKey" class="form-control" rows="3" required
+                    placeholder="ssh-ed25519 AAAA..."><%= values.sshPublicKey || '' %></textarea>
+        </div>
+        <p class="muted-note">Aucun mot de passe n'est jamais défini : la connexion se fait uniquement par la clé fournie ici. La première création télécharge et met en cache l'image choisie (plusieurs centaines de Mo).</p>
+        <button type="submit" class="btn btn-primary">Créer et démarrer</button>
+      </form>
+    </div>
+  </div>
+</section>

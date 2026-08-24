@@ -1,0 +1,66 @@
+<section>
+  <h1>Cloudflare — <%= zone.name %></h1>
+  <a href="/modules/cloudflare" class="btn btn-secondary" style="margin-bottom: 1rem;">← Toutes les zones</a>
+
+  <div class="card">
+    <div class="card-header"><h2>Enregistrements DNS</h2></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Nom</th><th>Contenu</th><th>TTL</th><th>Proxifié</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% records.forEach(record => { %>
+            <tr>
+              <td><%= record.type %></td>
+              <td><%= record.name %></td>
+              <td><%= record.content %></td>
+              <td><%= record.ttl === 1 ? 'Auto' : record.ttl %></td>
+              <td><%= record.proxied ? 'Oui' : 'Non' %></td>
+              <td>
+                <form method="POST" action="/modules/cloudflare/zones/<%= zone.id %>/records/<%= record.id %>/delete"
+                      onsubmit="return confirm('Supprimer cet enregistrement ?');" style="display:inline">
+                  <button type="submit" class="btn btn-secondary">Supprimer</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Ajouter un enregistrement</h2></div>
+    <div class="card-body">
+      <form method="POST" action="/modules/cloudflare/zones/<%= zone.id %>/records">
+        <div class="form-group">
+          <label for="type">Type</label>
+          <select id="type" name="type" class="form-select" required>
+            <option value="A">A</option>
+            <option value="AAAA">AAAA</option>
+            <option value="CNAME">CNAME</option>
+            <option value="TXT">TXT</option>
+            <option value="MX">MX</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="name">Nom</label>
+          <input type="text" id="name" name="name" class="form-control" required placeholder="sous-domaine.<%= zone.name %>">
+        </div>
+        <div class="form-group">
+          <label for="content">Contenu</label>
+          <input type="text" id="content" name="content" class="form-control" required placeholder="ex: 176.138.241.240">
+        </div>
+        <div class="form-group">
+          <label for="ttl">TTL (secondes, 1 = Auto)</label>
+          <input type="number" id="ttl" name="ttl" class="form-control" value="1">
+        </div>
+        <div class="form-group">
+          <label><input type="checkbox" name="proxied"> Proxifié par Cloudflare</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,33 @@
+import { Response, Request } from "express";
+import { inject, injectable } from "inversify";
+import { GET } from "../framework/express/hotspring/hotSpring";
+import { ModuleLoader } from "../core/modules/ModuleLoader";
+
+@injectable()
+export default class HomeController {
+  constructor(@inject(ModuleLoader) private readonly _moduleLoader: ModuleLoader) {}
+
+  @GET("/")
+  public async renderHome(request: Request, response: Response): Promise<void> {
+    // menuServices et currentUser sont déjà dans res.locals (middleware global,
+    // voir ExpressApplication) : tout autre module en bénéficie sans rien faire.
+    response.render("pages/Home", {
+      moduleCount: this._moduleLoader.getModuleCount(),
+    });
+  }
+
+  // Alimente la recherche du top-nav (SearchService.js) avec les modules
+  // réellement installés — plus de liste statique à maintenir à la main.
+  @GET("/api/suggestions")
+  public async getSuggestions(request: Request, response: Response): Promise<void> {
+    const suggestions = this._moduleLoader.getNavGroups().flatMap((group) =>
+      group.items.map((item) => ({
+        title: item.name,
+        description: item.description,
+        category: item.category,
+        path: item.url,
+      })),
+    );
+    response.json({ suggestions });
+  }
+}

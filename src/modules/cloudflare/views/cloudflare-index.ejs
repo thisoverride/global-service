@@ -1,0 +1,25 @@
+<section>
+  <h1>Cloudflare — zones</h1>
+  <div class="card">
+    <div class="card-header">
+      <h2><%= zones.length %> zone<%= zones.length > 1 ? 's' : '' %></h2>
+      <a href="/modules/cloudflare/settings" class="btn btn-secondary">Reconfigurer le jeton</a>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Domaine</th><th>Statut</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% zones.forEach(zone => { %>
+            <tr>
+              <td><%= zone.name %></td>
+              <td><span class="badge <%= zone.status === 'active' ? 'badge-success' : '' %>"><%= zone.status %></span></td>
+              <td><a href="/modules/cloudflare/zones/<%= zone.id %>" class="btn btn-primary">Enregistrements DNS</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

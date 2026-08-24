@@ -1,56 +1,22 @@
 <section class="home-console" id="dashboard">
-  <h1>Console Home</h1>
+  <h1>Console</h1>
   <div class="dashboard-grid">
     <div class="stat-card">
-      <h3>Emails envoyés (30j)</h3>
-      <div class="stat-value">24,521</div>
-    </div>
-    <div class="stat-card">
-      <h3>Taux d'ouverture</h3>
-      <div class="stat-value">68.5%</div>
-    </div>
-    <div class="stat-card">
-      <h3>Applications actives</h3>
-      <div class="stat-value">8</div>
-    </div>
-    <div class="stat-card">
-      <h3>Templates actifs</h3>
-      <div class="stat-value">12</div>
+      <h3>Modules installés</h3>
+      <div class="stat-value"><%= moduleCount %></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <h2>Applications récentes</h2>
-      <button class="btn btn-primary">
-        <i class="fas fa-plus"></i>
-        Nouvelle application
-      </button>
+      <h2>Services</h2>
     </div>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Status</th>
-            <th>Emails envoyés</th>
-            <th>Dernière utilisation</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Service Client</td>
-            <td><span class="badge badge-success">Actif</span></td>
-            <td>12,450</td>
-            <td>30/10/2024</td>
-            <td>
-              <button class="btn"><i class="fas fa-edit"></i></button>
-              <button class="btn"><i class="fas fa-trash"></i></button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="card-body">
+      <% if (menuServices.services.length === 0) { %>
+        <p>Aucun module installé pour l'instant. Utilisez le menu « Services » en haut à gauche une fois qu'un module aura été ajouté.</p>
+      <% } else { %>
+        <p>Utilisez le menu « Services » en haut à gauche pour ouvrir un module.</p>
+      <% } %>
     </div>
   </div>
 </section>

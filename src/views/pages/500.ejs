@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreur serveur</title>
+    <link rel="stylesheet" href="/assets/css/nofound.css">
+</head>
+<body>
+    <h1 class="title">Une erreur est survenue</h1>
+    <% if (typeof message !== 'undefined' && message) { %>
+      <p><%= message %></p>
+    <% } %>
+    <h2><a href="/">Retour à l'accueil</a></h2>
+</body>
+</html>

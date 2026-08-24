@@ -34,7 +34,7 @@ body {
 /* Contenu principal */
 .main-content {
   flex: 1;
-  margin-left: 250px;
+  margin-top: var(--top-nav-height);
   padding: 2rem;
   min-height: calc(100vh - var(--top-nav-height));
 }
@@ -49,6 +49,44 @@ body {
   flex: 1;
   margin-top: var(--top-nav-height);
 }
+/* Tableau de bord */
+.home-console h1 {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+}
+
+.stat-card h3 {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.muted-note {
+  color: var(--text-light);
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+}
+
 /* Composants de base */
 .card {
   background: white;
@@ -154,7 +192,6 @@ th {
 /* Media Queries globales */
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 60px;
     padding: 1rem;
   }
 }
@@ -246,6 +283,21 @@ th {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.logout-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn:hover {
+  color: var(--aws-orange);
 }
 
 @media (max-width: 768px) {
@@ -351,42 +403,6 @@ th {
 .breadcrumb i {
   font-size: 0.8rem;
   color: #999;
-}
-
-/* Sidebar */
-.sidebar {
-  position: fixed;
-  left: 0;
-  top: var(--top-nav-height);
-  bottom: 0;
-  width: 250px;
-  background-color: white;
-  border-right: 1px solid var(--border-color);
-  overflow-y: auto;
-  z-index: 100;
-}
-
-.nav-menu {
-  padding: 1rem 0;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  color: var(--text-dark);
-  text-decoration: none;
-  transition: background-color 0.2s;
-}
-
-.nav-item:hover {
-  background-color: var(--bg-light);
-}
-
-.nav-item i {
-  margin-right: 0.75rem;
-  width: 20px;
-  text-align: center;
 }
 
 /* ________________________Panneau des services______________________________ */
@@ -762,14 +778,6 @@ input:checked + .switch-slider:before {
 
 /* Media Queries */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 60px;
-  }
-
-  .nav-item span {
-    display: none;
-  }
-
   .services-grid {
     grid-template-columns: 1fr;
   }

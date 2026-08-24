@@ -1,0 +1,66 @@
+<%
+  const stateLabels = { running: 'En cours', paused: 'En pause', shutoff: 'Éteinte', other: 'Inconnu' };
+%>
+<section>
+  <h1>QEMU — machines virtuelles</h1>
+
+  <% if (message) { %>
+    <p style="color: var(--success-color);"><%= message %></p>
+  <% } %>
+  <% if (error) { %>
+    <p style="color: var(--danger);"><%= error %></p>
+  <% } %>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><%= domains.length %> VM<%= domains.length > 1 ? 's' : '' %></h2>
+      <a href="/modules/qemu/new" class="btn btn-primary">Créer une VM</a>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Nom</th><th>État</th><th>vCPU</th><th>Mémoire</th><th>Console VNC</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% domains.forEach(d => { %>
+            <tr>
+              <td><%= d.name %></td>
+              <td><span class="badge <%= d.state === 'running' ? 'badge-success' : '' %>"><%= stateLabels[d.state] %></span></td>
+              <td><%= d.vcpus %></td>
+              <td><%= d.memoryMiB %> Mo</td>
+              <td><%= d.vnc || '—' %></td>
+              <td>
+                <% if (d.state === 'running') { %>
+                  <form method="POST" action="/modules/qemu/<%= d.name %>/shutdown" style="display:inline">
+                    <button type="submit" class="btn btn-secondary">Arrêter</button>
+                  </form>
+                  <form method="POST" action="/modules/qemu/<%= d.name %>/reboot" style="display:inline">
+                    <button type="submit" class="btn btn-secondary">Redémarrer</button>
+                  </form>
+                  <form method="POST" action="/modules/qemu/<%= d.name %>/destroy" style="display:inline"
+                        onsubmit="return confirm('Forcer l\'arrêt (équivalent débranchement) ?');">
+                    <button type="submit" class="btn btn-secondary">Forcer l'arrêt</button>
+                  </form>
+                <% } else { %>
+                  <form method="POST" action="/modules/qemu/<%= d.name %>/start" style="display:inline">
+                    <button type="submit" class="btn btn-primary">Démarrer</button>
+                  </form>
+                <% } %>
+                <form method="POST" action="/modules/qemu/<%= d.name %>/delete" style="display:inline"
+                      onsubmit="return confirm('Supprimer definitivement cette VM et son disque ?');">
+                  <button type="submit" class="btn btn-secondary">Supprimer</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="muted-note">
+    La console VNC n'est accessible que depuis le serveur (écoute sur 127.0.0.1).
+    « Console VNC » indique <code>adresse:N</code> — le port TCP réel est <code>5900+N</code>.
+    Passez par un tunnel SSH (<code>ssh -L 5901:127.0.0.1:5900+N utilisateur@serveur</code>) puis un client VNC local sur <code>127.0.0.1:5901</code>.
+  </p>
+</section>

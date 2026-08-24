@@ -1,0 +1,31 @@
+<section>
+  <h1>Eustass — import de recettes</h1>
+
+  <div class="card">
+    <div class="card-body">
+      <% if (message) { %>
+        <p style="color: var(--success-color);"><%= message %></p>
+      <% } %>
+      <% if (error) { %>
+        <p style="color: var(--danger);"><%= error %></p>
+      <% } %>
+      <p>Un lien par ligne. Sites pris en charge : <%= supportedDomains.join(', ') %>.</p>
+      <form method="POST" action="/modules/eustass/import">
+        <div class="form-group">
+          <textarea name="urls" rows="4" class="form-control" placeholder="https://www.ricardocuisine.com/recettes/..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Lancer l'import</button>
+      </form>
+      <div class="dashboard-grid" style="margin-top: 1.5rem;">
+        <div class="stat-card">
+          <h3>Jobs en attente</h3>
+          <div class="stat-value"><%= pending == null ? '—' : pending %></div>
+        </div>
+        <div class="stat-card">
+          <h3>Recettes dans Anddie</h3>
+          <div class="stat-value"><%= count == null ? '—' : count %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

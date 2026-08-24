@@ -4,43 +4,77 @@ import HotSpring from './hotspring/core/HotSpring';
 import { configureMiddleware } from './config/middleware';
 import { configureErrorHandling } from './config/errorHandling';
 
-import ConsoleController from '../../controller/ConsoleController';
 import AuthController from '../../controller/AuthController';
-import HomeService from '../../services/HomeService';
-import { StaticDataManager } from '../../core/managers/StaticDataManager';
+import HomeController from '../../controller/HomeController';
+import { pool } from '../../core/db/pool';
+import { DB_POOL } from '../../core/db/token';
+import { bootstrapMigrationTracking, runModuleMigrations } from '../../core/db/migrate';
+import { bootstrapAdminUser } from '../../core/auth/users';
+import { createSessionMiddleware } from '../../core/auth/session';
+import { requireAuth } from '../../core/auth/requireAuth';
+import { ModuleLoader } from '../../core/modules/ModuleLoader';
+import * as path from 'path';
 
 export default class ExpressApplication {
   private app: Application;
   private IoCContainer: Container;
+  private moduleLoader: ModuleLoader;
 
   constructor() {
     this.app = express();
     this.IoCContainer = new Container();
+    this.moduleLoader = new ModuleLoader();
     this._initializeIoCContainer();
-    this._configureApp();
   }
 
   private _initializeIoCContainer(): void {
-    this.IoCContainer.bind<StaticDataManager>(StaticDataManager).toSelf().inSingletonScope();
-    this.IoCContainer.bind<HomeService>(HomeService).toSelf().inSingletonScope();
-    this.IoCContainer.bind<ConsoleController>(ConsoleController).toSelf().inRequestScope();
+    this.IoCContainer.bind(DB_POOL).toConstantValue(pool);
+    this.IoCContainer.bind<ModuleLoader>(ModuleLoader).toConstantValue(this.moduleLoader);
     this.IoCContainer.bind<AuthController>(AuthController).toSelf().inRequestScope();
+    this.IoCContainer.bind<HomeController>(HomeController).toSelf().inRequestScope();
+  }
+
+  // Prepare tout ce qui doit exister avant d'accepter des requetes : base
+  // (migrations coeur + compte admin) puis modules (chacun avec ses propres
+  // migrations) — dans cet ordre, sinon un module ne trouverait pas encore
+  // schema_migrations.
+  private async _bootstrapDatabase(): Promise<void> {
+    await bootstrapMigrationTracking(pool);
+    await runModuleMigrations(pool, 'core', path.join(__dirname, '..', '..', 'core', 'db', 'migrations'));
+    await bootstrapAdminUser(pool);
   }
 
   private _configureApp(): void {
     configureMiddleware(this.app);
-    const constroller = [AuthController, ConsoleController];
-    constroller.forEach((ctlClass) => HotSpring.bind(this.app, this.IoCContainer, ctlClass))
-    configureErrorHandling(this.app);
+    this.app.use(createSessionMiddleware(pool));
+
+    // Disponible sur toutes les vues (y compris celles des modules) sans
+    // qu'aucun module n'ait besoin d'y penser.
+    this.app.use((req, res, next) => {
+      res.locals.menuServices = { services: this.moduleLoader.getNavGroups() };
+      res.locals.currentUser = req.session.username;
+      next();
+    });
+
+    const publicControllers = [AuthController];
+    publicControllers.forEach((ctlClass) => HotSpring.bind(this.app, this.IoCContainer, ctlClass));
+
+    this.app.use(requireAuth);
+
+    const privateControllers = [HomeController];
+    privateControllers.forEach((ctlClass) => HotSpring.bind(this.app, this.IoCContainer, ctlClass));
   }
 
   public async run(port: number): Promise<void> {
-    try {
-      this.app.listen(port, async () => {
-        console.info('\x1b[1m\x1b[36m%s\x1b[0m', `Luminous Service on http://localhost:${port}`);
-      });
-    } catch (error) {
-      throw new Error(`Connection to database failed: ${String(error)}`);
-    }
+    await this._bootstrapDatabase();
+    this._configureApp();
+    // Monte chaque module APRES les controleurs du coeur : requireAuth est deja
+    // en place, donc tout module en herite automatiquement.
+    await this.moduleLoader.loadAll(this.app, pool, requireAuth);
+    configureErrorHandling(this.app);
+
+    this.app.listen(port, () => {
+      console.info('\x1b[1m\x1b[36m%s\x1b[0m', `Console sur http://localhost:${port}`);
+    });
   }
 }

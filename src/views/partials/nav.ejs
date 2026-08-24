@@ -20,9 +20,11 @@
     </div>
   </div>
   <div class="top-nav-right">
-    <i class="fas fa-bell"></i>
     <i class="fas fa-user-circle"></i>
-    <span>Admin</span>
+    <span><%= typeof currentUser !== 'undefined' && currentUser ? currentUser : '' %></span>
+    <form method="POST" action="/logout" style="display:inline">
+      <button type="submit" class="logout-btn" title="Se déconnecter"><i class="fas fa-sign-out-alt"></i></button>
+    </form>
   </div>
 </nav>
 
