@@ -5,10 +5,10 @@
   <h1>QEMU — machines virtuelles</h1>
 
   <% if (message) { %>
-    <p style="color: var(--success-color);"><%= message %></p>
+    <div class="alert alert-success"><%= message %></div>
   <% } %>
   <% if (error) { %>
-    <p style="color: var(--danger);"><%= error %></p>
+    <div class="alert alert-danger"><%= error %></div>
   <% } %>
 
   <div class="card">
@@ -16,6 +16,11 @@
       <h2><%= domains.length %> VM<%= domains.length > 1 ? 's' : '' %></h2>
       <a href="/modules/qemu/new" class="btn btn-primary">Créer une VM</a>
     </div>
+    <% if (domains.length === 0) { %>
+      <div class="empty-state">
+        <p>Aucune VM pour l'instant.</p>
+      </div>
+    <% } else { %>
     <div class="table-container">
       <table>
         <thead>
@@ -56,6 +61,7 @@
         </tbody>
       </table>
     </div>
+    <% } %>
   </div>
 
   <p class="muted-note">
