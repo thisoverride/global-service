@@ -197,6 +197,56 @@ p:last-child {
   color: var(--text-light);
 }
 
+/* Visualiseur de logs */
+.log-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-light);
+}
+
+.log-toolbar .form-control {
+  flex: 1;
+}
+
+.log-autoscroll {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.log-panel {
+  display: block;
+  background: #1a1f28;
+  color: #d8dee9;
+  font-family: ui-monospace, "SF Mono", Consolas, "Courier New", monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  padding: 1rem;
+  margin: 0;
+  max-height: 640px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 0 0 8px 8px;
+}
+
+.log-line {
+  display: block;
+}
+
+.log-time {
+  color: #6b7688;
+  margin-right: 0.75rem;
+  user-select: none;
+}
+
 /* Composants de base */
 .card {
   background: white;
@@ -227,6 +277,7 @@ p:last-child {
   font-weight: 500;
   font-size: 0.875rem;
   text-decoration: none;
+  white-space: nowrap;
   transition: all 0.15s;
   display: inline-flex;
   align-items: center;
@@ -260,10 +311,12 @@ p:last-child {
 
 /* Badges */
 .badge {
+  display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
+  white-space: nowrap;
   background: var(--bg-light);
   color: var(--text-light);
 }
@@ -355,12 +408,21 @@ td {
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
+  overflow-wrap: break-word;
 }
 
 th {
   background-color: var(--bg-light);
   font-weight: 500;
   color: var(--text-light);
+}
+
+/* Pour une cellule contenant une chaine longue sans espace (digest, tag
+   d'image) : overflow-wrap seul ne suffit pas, le navigateur ne trouve pas
+   toujours de point de coupure naturel dans ":"/"-" et laisse la cellule
+   etirer toute la ligne. */
+.cell-break {
+  word-break: break-all;
 }
 
 /* Media Queries globales */

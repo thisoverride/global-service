@@ -1,0 +1,81 @@
+<section>
+  <h1>Logs — <%= container.name %></h1>
+  <a href="/modules/logs" class="btn btn-secondary" style="margin-bottom: 1rem;">← Tous les conteneurs</a>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><%= container.image %></h2>
+      <span id="live-indicator" class="badge">connexion…</span>
+    </div>
+    <div class="log-toolbar">
+      <input type="text" id="log-filter" class="form-control" placeholder="Filtrer les lignes affichées…">
+      <button type="button" id="log-clear" class="btn btn-secondary">Effacer</button>
+      <label class="log-autoscroll">
+        <input type="checkbox" id="log-autoscroll" checked>
+        Défilement automatique
+      </label>
+    </div>
+    <pre id="log-panel" class="log-panel"><%- initialLogs
+      .split('\n')
+      .filter(l => l.trim())
+      .map(l => {
+        const m = l.match(/^(\S+)\s([\s\S]*)$/);
+        const time = m ? new Date(m[1]).toLocaleTimeString('fr-FR') : '';
+        const text = m ? m[2] : l;
+        return `<span class="log-line"><span class="log-time">${time}</span>${text.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</span>`;
+      })
+      .join('\n') %></pre>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const panel = document.getElementById('log-panel');
+    const filterInput = document.getElementById('log-filter');
+    const clearBtn = document.getElementById('log-clear');
+    const autoscroll = document.getElementById('log-autoscroll');
+    const indicator = document.getElementById('live-indicator');
+
+    function applyFilter() {
+      const term = filterInput.value.toLowerCase();
+      panel.querySelectorAll('.log-line').forEach((line) => {
+        line.style.display = !term || line.textContent.toLowerCase().includes(term) ? '' : 'none';
+      });
+    }
+
+    function scrollToBottom() {
+      if (autoscroll.checked) panel.scrollTop = panel.scrollHeight;
+    }
+
+    function appendLine(raw) {
+      if (!raw.trim()) return;
+      const m = raw.match(/^(\S+)\s([\s\S]*)$/);
+      const time = m ? new Date(m[1]).toLocaleTimeString('fr-FR') : '';
+      const text = m ? m[2] : raw;
+
+      const span = document.createElement('span');
+      span.className = 'log-line';
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'log-time';
+      timeSpan.textContent = time;
+      span.appendChild(timeSpan);
+      span.appendChild(document.createTextNode(text));
+      panel.appendChild(document.createTextNode('\n'));
+      panel.appendChild(span);
+
+      const term = filterInput.value.toLowerCase();
+      if (term && !span.textContent.toLowerCase().includes(term)) span.style.display = 'none';
+
+      scrollToBottom();
+    }
+
+    filterInput.addEventListener('input', applyFilter);
+    clearBtn.addEventListener('click', () => { panel.textContent = ''; });
+    scrollToBottom();
+
+    const source = new EventSource(window.location.pathname + '/stream');
+    source.onopen = () => { indicator.textContent = 'en direct'; indicator.className = 'badge badge-success'; };
+    source.onerror = () => { indicator.textContent = 'déconnecté'; indicator.className = 'badge'; };
+    source.onmessage = (event) => appendLine(JSON.parse(event.data));
+  })();
+</script>

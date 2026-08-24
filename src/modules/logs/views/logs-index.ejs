@@ -1,0 +1,36 @@
+<section>
+  <h1>Logs</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><%= containers.length %> conteneur<%= containers.length > 1 ? 's' : '' %></h2>
+      <a href="?all=<%= showAll ? '0' : '1' %>" class="btn btn-secondary">
+        <%= showAll ? 'Actifs uniquement' : 'Afficher aussi les arrêtés' %>
+      </a>
+    </div>
+    <% if (containers.length === 0) { %>
+      <div class="empty-state">
+        <p>Aucun conteneur à afficher.</p>
+      </div>
+    <% } else { %>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Nom</th><th>Image</th><th>État</th><th>Statut</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% containers.forEach(c => { %>
+            <tr>
+              <td><%= c.name %></td>
+              <td class="cell-break"><%= c.image %></td>
+              <td><span class="badge <%= c.state === 'running' ? 'badge-success' : '' %>"><%= c.state %></span></td>
+              <td><%= c.status %></td>
+              <td><a href="/modules/logs/<%= c.id %>" class="btn btn-primary">Voir les logs</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</section>
