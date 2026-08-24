@@ -19,10 +19,17 @@ FROM node:22-slim AS runner
 # volumes Coolify) : virsh/qemu-img/genisoimage doivent exister dans l'image,
 # aucun binding natif Node a compiler. ca-certificates est necessaire pour
 # telecharger les images cloud de base en HTTPS (voir modules/qemu/images.ts).
+# python3 sert au relais du module fail2ban : son serveur ne parle qu'un
+# protocole pickle sur socket UNIX, illisible depuis Node (voir
+# modules/fail2ban/f2b.py). On installe l'interpréteur, pas le paquet
+# fail2ban complet — inutile d'embarquer un second serveur dans l'image.
+# NB : "python3" et non "python3-minimal", qui fournit l'interpréteur SANS
+# la bibliothèque standard — json, socket et pickle y manquent.
 RUN apt-get update && apt-get install -y --no-install-recommends \
       libvirt-clients \
       qemu-utils \
       genisoimage \
+      python3 \
       ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 

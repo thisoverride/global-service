@@ -1,0 +1,61 @@
+<section>
+  <h1>Fail2ban</h1>
+
+  <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <% if (loadError) { %>
+    <div class="card">
+      <div class="empty-state">
+        <p><%= loadError %></p>
+        <p class="muted-note">Le socket de fail2ban doit être monté dans le conteneur de la console.</p>
+      </div>
+    </div>
+  <% } else { %>
+    <%
+      const totalBanned = jails.reduce((n, j) => n + j.currentlyBanned, 0);
+      const totalEver   = jails.reduce((n, j) => n + j.totalBanned, 0);
+    %>
+    <div class="dashboard-grid dashboard-grid--wide">
+      <div class="stat-card">
+        <h3>Jails actives</h3>
+        <div class="stat-value"><%= jails.length %></div>
+      </div>
+      <div class="stat-card">
+        <h3>Bannies actuellement</h3>
+        <div class="stat-value"><%= totalBanned %></div>
+      </div>
+      <div class="stat-card">
+        <h3>Bannies au total</h3>
+        <div class="stat-value"><%= totalEver %></div>
+      </div>
+      <div class="stat-card">
+        <h3>Version</h3>
+        <div class="stat-value stat-value--text"><%= version %></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>Jails</h2></div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>Jail</th><th>Surveille</th><th>Échecs en cours</th><th>Bannies</th><th>Total banni</th><th></th></tr>
+          </thead>
+          <tbody>
+            <% jails.forEach(j => { %>
+              <tr>
+                <td><%= j.name %></td>
+                <td class="cell-break"><%= (j.watching || []).join(', ') || '—' %></td>
+                <td><%= j.currentlyFailed %></td>
+                <td><span class="badge <%= j.currentlyBanned > 0 ? 'badge-success' : '' %>"><%= j.currentlyBanned %></span></td>
+                <td><%= j.totalBanned %></td>
+                <td><a href="/modules/fail2ban/jail/<%= encodeURIComponent(j.name) %>" class="btn btn-primary">Détail</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% } %>
+</section>

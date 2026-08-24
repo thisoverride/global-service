@@ -1,0 +1,71 @@
+<section>
+  <h1>Jail <%= jail.name %></h1>
+  <a href="/modules/fail2ban" class="btn btn-secondary" style="margin-bottom: 1rem;">← Toutes les jails</a>
+
+  <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <div class="dashboard-grid dashboard-grid--wide">
+    <div class="stat-card">
+      <h3>Échecs en cours</h3>
+      <div class="stat-value"><%= jail.currentlyFailed %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Échecs au total</h3>
+      <div class="stat-value"><%= jail.totalFailed %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Bannies actuellement</h3>
+      <div class="stat-value"><%= jail.currentlyBanned %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Bannies au total</h3>
+      <div class="stat-value"><%= jail.totalBanned %></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Adresses bannies</h2></div>
+    <% if (jail.bannedIps.length === 0) { %>
+      <div class="empty-state"><p>Aucune adresse bannie actuellement.</p></div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Adresse IP</th><th>Actions</th></tr></thead>
+          <tbody>
+            <% jail.bannedIps.forEach(ip => { %>
+              <tr>
+                <td class="cell-break"><%= ip %></td>
+                <td class="row-actions">
+                  <form method="POST" action="/modules/fail2ban/jail/<%= encodeURIComponent(jail.name) %>/unban" style="display:inline">
+                    <input type="hidden" name="ip" value="<%= ip %>">
+                    <button type="submit" class="btn btn-secondary">Débannir</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Bannir une adresse</h2></div>
+    <div class="card-body">
+      <form method="POST" action="/modules/fail2ban/jail/<%= encodeURIComponent(jail.name) %>/ban">
+        <div class="form-group">
+          <label for="ip">Adresse IP</label>
+          <input type="text" id="ip" name="ip" class="form-control" required placeholder="203.0.113.42">
+        </div>
+        <p class="muted-note">
+          Le bannissement suit la durée configurée pour cette jail.
+          Vérifiez l'adresse : bannir la vôtre vous couperait l'accès au serveur.
+        </p>
+        <button type="submit" class="btn btn-primary">Bannir</button>
+      </form>
+    </div>
+  </div>
+
+  <p class="muted-note">Cette jail surveille : <%= (jail.watching || []).join(', ') || '—' %></p>
+</section>
