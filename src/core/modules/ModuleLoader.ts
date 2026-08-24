@@ -10,6 +10,11 @@ export interface NavGroup {
   items: NavItem[];
 }
 
+export interface CategoryGroup {
+  category: string;
+  items: NavItem[];
+}
+
 export interface NavItem {
   id: string;
   name: string;
@@ -76,21 +81,23 @@ export class ModuleLoader {
     console.info(`🧩 Module chargé : ${consoleModule.manifest.name} (${consoleModule.manifest.basePath})`);
   }
 
+  private getAllItems(): NavItem[] {
+    return this.loaded.map((m) => ({
+      id: m.manifest.id,
+      name: m.manifest.name,
+      icon: m.manifest.icon,
+      url: m.manifest.basePath,
+      description: m.manifest.description,
+      category: m.manifest.category,
+    }));
+  }
+
   // Regroupe les modules par lettre initiale, meme forme que l'ancien
   // services.json statique — le panneau nav.ejs n'a rien a changer.
   public getNavGroups(): NavGroup[] {
     const byLetter = new Map<string, NavItem[]>();
-
-    for (const m of this.loaded) {
-      const letter = m.manifest.name.charAt(0).toUpperCase();
-      const item: NavItem = {
-        id: m.manifest.id,
-        name: m.manifest.name,
-        icon: m.manifest.icon,
-        url: m.manifest.basePath,
-        description: m.manifest.description,
-        category: m.manifest.category,
-      };
+    for (const item of this.getAllItems()) {
+      const letter = item.name.charAt(0).toUpperCase();
       if (!byLetter.has(letter)) byLetter.set(letter, []);
       byLetter.get(letter)!.push(item);
     }
@@ -98,6 +105,20 @@ export class ModuleLoader {
     return [...byLetter.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([letter, items]) => ({ letter, items }));
+  }
+
+  // Regroupe par categorie — pour la grille de la page d'accueil, plus
+  // parlante qu'un classement alphabetique quand il y a peu de modules.
+  public getServicesByCategory(): CategoryGroup[] {
+    const byCategory = new Map<string, NavItem[]>();
+    for (const item of this.getAllItems()) {
+      if (!byCategory.has(item.category)) byCategory.set(item.category, []);
+      byCategory.get(item.category)!.push(item);
+    }
+
+    return [...byCategory.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([category, items]) => ({ category, items }));
   }
 
   public getModuleCount(): number {

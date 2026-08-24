@@ -13,6 +13,7 @@ export default class HomeController {
     // voir ExpressApplication) : tout autre module en bénéficie sans rien faire.
     response.render("pages/Home", {
       moduleCount: this._moduleLoader.getModuleCount(),
+      categories: this._moduleLoader.getServicesByCategory(),
     });
   }
 

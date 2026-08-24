@@ -81,6 +81,78 @@ body {
   color: var(--text-dark);
 }
 
+.category-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin: 1.5rem 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.service-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.service-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border-color: var(--aws-orange);
+}
+
+.service-tile-icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--bg-light);
+  color: var(--aws-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-tile-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.service-tile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.service-tile-name {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.service-tile-description {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .muted-note {
   color: var(--text-light);
   font-size: 0.85rem;
