@@ -1065,11 +1065,18 @@ th {
 
 /* Champs etiquetes pour un enregistrement unique : preferable a un tableau
    dont l'en-tete pese autant que la seule ligne de donnees. */
+/* Colonnes libres plutot qu'une grille a parts egales : une adresse IPv6
+   tient sur une ligne au lieu d'etre coupee en plein milieu d'un groupe
+   pour respecter une largeur de colonne uniforme. */
 .field-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2.5rem;
   margin: 0;
+}
+
+.field {
+  min-width: 140px;
 }
 
 .field dt {
