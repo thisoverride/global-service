@@ -1,92 +1,112 @@
-<section class="home-console" id="dashboard">
-  <h1>Console</h1>
+<%
+  // Etat global tire des seules donnees dont dispose le tableau de bord.
+  const alert = stats.failed > 0;
+  const health = alert
+    ? ['warning', `${stats.failed} tentative${stats.failed > 1 ? 's' : ''} de connexion en échec`]
+    : ['ok', 'Aucune tentative de connexion en échec'];
+%>
+<div class="console-head">
+  <div class="console-head-main">
+    <span class="console-head-eyebrow">Serveur</span>
+    <h1>dalency-core</h1>
+    <p class="console-head-sub">
+      <%= moduleCount %> module<%= moduleCount > 1 ? 's' : '' %> actif<%= moduleCount > 1 ? 's' : '' %>
+      · <%= categories.length %> catégorie<%= categories.length > 1 ? 's' : '' %>
+    </p>
+  </div>
+  <div class="status-pill status-pill--<%= health[0] %>">
+    <span class="status-dot"></span><%= health[1] %>
+  </div>
+</div>
 
-  <h2 class="section-title">Sécurité</h2>
+<section class="panel">
+  <div class="panel-head">
+    <h2>Sécurité <span class="panel-sub">7 derniers jours</span></h2>
+    <a class="btn btn-secondary" href="/modules/logins">Voir l'historique des connexions</a>
+  </div>
 
-  <div class="dashboard-grid dashboard-grid--wide">
-    <div class="stat-card">
-      <h3>Connexions réussies (7 j)</h3>
-      <div class="stat-value stat-value--ok"><%= stats.success %></div>
+  <div class="metric-row">
+    <div class="metric">
+      <span class="metric-label">Connexions réussies</span>
+      <span class="metric-value metric-value--ok"><%= stats.success %></span>
     </div>
-    <div class="stat-card">
-      <h3>Tentatives échouées (7 j)</h3>
-      <div class="stat-value <%= stats.failed > 0 ? 'stat-value--alert' : '' %>"><%= stats.failed %></div>
+    <div class="metric">
+      <span class="metric-label">Tentatives échouées</span>
+      <span class="metric-value <%= alert ? 'metric-value--alert' : '' %>"><%= stats.failed %></span>
     </div>
-    <div class="stat-card">
-      <h3>Adresses distinctes (7 j)</h3>
-      <div class="stat-value"><%= stats.distinctIps %></div>
+    <div class="metric">
+      <span class="metric-label">Adresses distinctes</span>
+      <span class="metric-value"><%= stats.distinctIps %></span>
+    </div>
+    <div class="metric">
+      <span class="metric-label">Dernier échec</span>
+      <span class="metric-value metric-value--text"><%= formatDateTime(stats.lastFailureAt) %></span>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      <h2>Dernière tentative de connexion</h2>
-      <a class="btn btn-secondary" href="/modules/logins">Voir l'historique des connexions</a>
-    </div>
-
-    <% if (!lastAttempt) { %>
-      <div class="empty-state">
-        <p>Aucune tentative enregistrée pour l'instant.</p>
-        <p class="muted-note">
-          Le journal démarre à la mise en service de cette page : les connexions
-          antérieures n'y figurent pas.
-        </p>
-      </div>
-    <% } else { %>
-      <%# Une seule tentative : des champs etiquetes se lisent mieux qu'un
-          tableau a cinq colonnes dont le corps ne compte qu'une ligne. %>
-      <div class="card-body">
-        <dl class="field-grid">
-          <div class="field">
-            <dt>Résultat</dt>
-            <dd><%- include('partials/attempt/result', { attempt: lastAttempt }) %></dd>
-          </div>
-          <div class="field">
-            <dt>Quand</dt>
-            <dd><%= formatDateTime(lastAttempt.createdAt) %></dd>
-          </div>
-          <div class="field">
-            <dt>Identifiant</dt>
-            <dd><%= lastAttempt.username || '—' %></dd>
-          </div>
-          <div class="field">
-            <dt>Provenance</dt>
-            <dd><%- include('partials/attempt/origin', { attempt: lastAttempt }) %></dd>
-          </div>
-          <div class="field">
-            <dt>Appareil</dt>
-            <dd><%- include('partials/attempt/device', { attempt: lastAttempt }) %></dd>
-          </div>
-        </dl>
-      </div>
-    <% } %>
-  </div>
-
-  <h2 class="section-title">
-    Services
-    <span class="section-count"><%= moduleCount %> module<%= moduleCount > 1 ? 's' : '' %></span>
-  </h2>
-
-  <% if (categories.length === 0) { %>
-    <div class="card">
-      <div class="card-body">
-        <p>Aucun module installé pour l'instant.</p>
-      </div>
+  <% if (!lastAttempt) { %>
+    <div class="panel-note">
+      Aucune tentative enregistrée pour l'instant. Le journal démarre à la mise
+      en service de cette page : les connexions antérieures n'y figurent pas.
     </div>
   <% } else { %>
-    <% categories.forEach(group => { %>
-      <h3 class="category-title"><%= group.category %></h3>
-      <div class="tiles-grid">
-        <% group.items.forEach(item => { %>
-          <a href="<%= item.url %>" class="service-tile">
-            <div class="service-tile-icon"><%- item.icon %></div>
-            <div class="service-tile-info">
-              <span class="service-tile-name"><%= item.name %></span>
-              <span class="service-tile-description"><%= item.description %></span>
-            </div>
-          </a>
-        <% }) %>
-      </div>
-    <% }) %>
+    <div class="panel-strip">
+      <span class="panel-strip-label">Dernière tentative</span>
+      <dl class="kv-row">
+        <div class="kv">
+          <dt>Résultat</dt>
+          <dd><%- include('partials/attempt/result', { attempt: lastAttempt }) %></dd>
+        </div>
+        <div class="kv">
+          <dt>Quand</dt>
+          <dd><%= formatDateTime(lastAttempt.createdAt) %></dd>
+        </div>
+        <div class="kv">
+          <dt>Identifiant</dt>
+          <dd><%= lastAttempt.username || '—' %></dd>
+        </div>
+        <div class="kv">
+          <dt>Provenance</dt>
+          <dd><%- include('partials/attempt/origin', { attempt: lastAttempt }) %></dd>
+        </div>
+        <div class="kv">
+          <dt>Appareil</dt>
+          <dd><%- include('partials/attempt/device', { attempt: lastAttempt }) %></dd>
+        </div>
+      </dl>
+    </div>
+  <% } %>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>Services <span class="panel-sub"><%= moduleCount %> module<%= moduleCount > 1 ? 's' : '' %></span></h2>
+  </div>
+
+  <% if (categories.length === 0) { %>
+    <div class="panel-note">Aucun module installé pour l'instant.</div>
+  <% } else { %>
+    <%# Colonnes denses facon "Tous les services" d'AWS : on voit tout le
+        catalogue sans defiler, au lieu de grandes tuiles tres espacees. %>
+    <div class="service-columns">
+      <% categories.forEach(group => { %>
+        <div class="service-group">
+          <h3 class="service-group-title"><%= group.category %></h3>
+          <ul class="service-list">
+            <% group.items.forEach(item => { %>
+              <li>
+                <a href="<%= item.url %>" class="service-link">
+                  <span class="service-link-icon"><%- item.icon %></span>
+                  <span class="service-link-text">
+                    <span class="service-link-name"><%= item.name %></span>
+                    <span class="service-link-desc"><%= item.description %></span>
+                  </span>
+                </a>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+      <% }) %>
+    </div>
   <% } %>
 </section>

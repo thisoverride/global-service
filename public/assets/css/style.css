@@ -1038,55 +1038,304 @@ th {
   color: var(--text-light);
 }
 
-/* Titre de grande section du tableau de bord ("Sécurité", "Services"). Se
-   distingue de .category-title, qui reste le sous-niveau (les categories de
-   modules vivent a l'interieur de la section Services). */
-.section-title {
+
+
+
+
+
+
+
+
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   Tableau de bord — parti pris console AWS : dense, encadre, accent orange.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* En-tete de page : bandeau navy qui donne son identite a la console des la
+   premiere ligne, au lieu d'un titre pose sur du blanc. */
+.console-head {
   display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  font-size: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--aws-blue);
+  /* Le liseré orange est la signature visuelle reprise de la barre du haut. */
+  border-left: 4px solid var(--aws-orange);
+  border-radius: 8px;
+  padding: 1.15rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.console-head h1 {
+  color: white;
+  font-size: 1.6rem;
+  margin: 0.1rem 0 0.2rem;
+  letter-spacing: -0.01em;
+}
+
+.console-head-eyebrow {
+  display: block;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--text-dark);
-  margin: 2rem 0 1rem;
-  padding-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--aws-orange);
+}
+
+.console-head-sub {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #b9c2cc;
+}
+
+/* Indicateur d'etat facon AWS : pastille + libelle, pas un gros bloc colore. */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #e6eaee;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--success-color);
+}
+
+.status-pill--warning .status-dot {
+  background: var(--aws-orange);
+}
+
+/* Panneau : le conteneur de base de la console. Bordure franche, en-tete
+   separe, contenu au contact des bords — l'inverse des cartes flottantes. */
+.panel {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-light);
   border-bottom: 1px solid var(--border-color);
 }
 
-.section-title:first-of-type {
-  margin-top: 1rem;
+.panel-head h2 {
+  font-size: 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
 }
 
-.section-count {
-  font-size: 0.8rem;
+.panel-sub {
+  font-size: 0.78rem;
   font-weight: 400;
   color: var(--text-light);
 }
 
-/* Champs etiquetes pour un enregistrement unique : preferable a un tableau
-   dont l'en-tete pese autant que la seule ligne de donnees. */
-/* Colonnes libres plutot qu'une grille a parts egales : une adresse IPv6
-   tient sur une ligne au lieu d'etre coupee en plein milieu d'un groupe
-   pour respecter une largeur de colonne uniforme. */
-.field-grid {
+.panel-note {
+  padding: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* Rangee de mesures : separateurs verticaux plutot que cartes distinctes,
+   pour supprimer les gouttieres vides entre les chiffres. */
+.metric-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem 2.5rem;
-  margin: 0;
 }
 
-.field {
-  min-width: 140px;
+.metric {
+  flex: 1 1 160px;
+  padding: 1rem 1.25rem;
+  border-right: 1px solid var(--border-color);
 }
 
-.field dt {
-  font-size: 0.8rem;
-  font-weight: 500;
+.metric:last-child {
+  border-right: 0;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--text-light);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 
-.field dd {
-  margin: 0;
+.metric-value {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
   color: var(--text-dark);
+}
+
+.metric-value--ok {
+  color: var(--success-color);
+}
+
+.metric-value--alert {
+  color: var(--error-color);
+}
+
+.metric-value--text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding-top: 0.45rem;
+}
+
+/* Bandeau de detail sous les mesures : etiquette a gauche, paires cle/valeur
+   alignees a droite, le tout sur une seule ligne tant que la place le permet. */
+.panel-strip {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 0.9rem 1.25rem;
+  border-top: 1px solid var(--border-color);
+  background: #fbfcfd;
+}
+
+.panel-strip-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-light);
+  padding-top: 0.15rem;
+  flex: none;
+}
+
+.kv-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin: 0;
+  flex: 1;
+}
+
+.kv dt {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  margin-bottom: 0.15rem;
+}
+
+.kv dd {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* Catalogue de services en colonnes denses : tout le parc tient dans un seul
+   panneau, sans les grandes tuiles espacees d'avant. */
+.service-columns {
+  columns: 3 240px;
+  column-gap: 2rem;
+  padding: 1.25rem;
+}
+
+.service-group {
+  break-inside: avoid;
+  margin-bottom: 1.4rem;
+}
+
+.service-group-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-light);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.service-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.service-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  margin: 0 -0.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  border-left: 2px solid transparent;
+}
+
+.service-link:hover {
+  background: var(--bg-light);
+  border-left-color: var(--aws-orange);
+}
+
+.service-link-icon {
+  flex: none;
+  display: flex;
+  color: var(--aws-blue);
+  padding-top: 1px;
+}
+
+.service-link-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.service-link-text {
+  min-width: 0;
+}
+
+.service-link-name {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--aws-blue);
+}
+
+.service-link:hover .service-link-name {
+  text-decoration: underline;
+}
+
+.service-link-desc {
+  display: block;
+  font-size: 0.76rem;
+  line-height: 1.35;
+  color: var(--text-light);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .metric {
+    flex-basis: 50%;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .service-columns {
+    columns: 1;
+  }
 }
