@@ -47,11 +47,11 @@
           </div>
           <div class="field">
             <dt>Identifiant</dt>
-            <dd class="cell-break"><%= lastAttempt.username || '—' %></dd>
+            <dd><%= lastAttempt.username || '—' %></dd>
           </div>
           <div class="field">
             <dt>Provenance</dt>
-            <dd class="cell-break"><%- include('partials/attempt/origin', { attempt: lastAttempt }) %></dd>
+            <dd><%- include('partials/attempt/origin', { attempt: lastAttempt }) %></dd>
           </div>
           <div class="field">
             <dt>Appareil</dt>
