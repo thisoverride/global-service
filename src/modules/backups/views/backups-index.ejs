@@ -62,12 +62,39 @@
         <table>
           <tbody>
             <tr><th>Destination</th><td class="cell-break"><%= status.destination %></td></tr>
-            <tr><th>Journal</th><td class="cell-break"><%= status.log %></td></tr>
+            <%
+              // Le script consigne un chemin absolu ; on ne propose le lien que
+              // si ce fichier fait bien partie de ceux que la console sait lire.
+              const logName = String(status.log || '').split('/').pop();
+              const readable = logs.some(f => f.name === logName);
+            %>
+            <tr>
+              <th>Journal</th>
+              <td class="cell-break">
+                <% if (readable) { %>
+                  <a href="/modules/backups/logs/<%= encodeURIComponent(logName) %>"><%= status.log %></a>
+                <% } else { %>
+                  <%= status.log %>
+                <% } %>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   <% } %>
+
+  <div class="card">
+    <div class="card-header"><h2>Journaux</h2></div>
+    <div class="card-body">
+      <% if (logs.length === 0) { %>
+        <p class="muted-note">Aucun journal lisible depuis la console.</p>
+      <% } else { %>
+        <p><%= logs.length %> journal<%= logs.length > 1 ? 'x' : '' %> disponible<%= logs.length > 1 ? 's' : '' %>, du <%= logs[logs.length - 1].date %> au <%= logs[0].date %>.</p>
+      <% } %>
+      <a class="btn btn-secondary" href="/modules/backups/logs">Consulter les journaux</a>
+    </div>
+  </div>
 
   <p class="muted-note">
     La sauvegarde tourne chaque nuit à 03:00 et conserve 7 jours.

@@ -1,10 +1,97 @@
+<%
+  // Drapeau depuis le code pays ISO fourni par Cloudflare (CF-IPCountry) :
+  // 0x1F1E6 est le premier indicatif regional, décalé de 'A'.
+  function flag(code) {
+    if (!code || code.length !== 2 || !/^[A-Z]{2}$/.test(code)) return '';
+    return String.fromCodePoint(...[...code].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+  }
+  function when(iso) {
+    return iso ? new Date(iso).toLocaleString('fr-FR') : '—';
+  }
+%>
 <section class="home-console" id="dashboard">
   <h1>Console</h1>
-  <div class="dashboard-grid">
+
+  <div class="dashboard-grid dashboard-grid--wide">
     <div class="stat-card">
       <h3>Modules installés</h3>
       <div class="stat-value"><%= moduleCount %></div>
     </div>
+    <div class="stat-card">
+      <h3>Connexions réussies (7 j)</h3>
+      <div class="stat-value stat-value--ok"><%= stats.success %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Tentatives échouées (7 j)</h3>
+      <div class="stat-value <%= stats.failed > 0 ? 'stat-value--alert' : '' %>"><%= stats.failed %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Adresses distinctes (7 j)</h3>
+      <div class="stat-value"><%= stats.distinctIps %></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Tentatives de connexion</h2>
+      <% if (stats.lastFailureAt) { %>
+        <span class="badge badge-danger">Dernier échec : <%= when(stats.lastFailureAt) %></span>
+      <% } %>
+    </div>
+
+    <% if (attempts.length === 0) { %>
+      <div class="empty-state">
+        <p>Aucune tentative enregistrée pour l'instant.</p>
+        <p class="muted-note">
+          Le journal démarre à la mise en service de cette page : les connexions
+          antérieures n'y figurent pas.
+        </p>
+      </div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Quand</th>
+              <th>Résultat</th>
+              <th>Identifiant</th>
+              <th>Provenance</th>
+              <th>Appareil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% attempts.forEach(a => { %>
+              <tr>
+                <td><%= when(a.createdAt) %></td>
+                <td>
+                  <% if (a.success) { %>
+                    <span class="badge badge-success">Réussie</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">Échouée</span>
+                  <% } %>
+                </td>
+                <td class="cell-break"><%= a.username || '—' %></td>
+                <td class="cell-break">
+                  <span class="origin-ip"><%= a.ip || '—' %></span>
+                  <% if (a.country) { %>
+                    <span class="origin-country"><%= flag(a.country) %> <%= a.country %></span>
+                  <% } %>
+                  <% if (a.spoofSuspect) { %>
+                    <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= a.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">
+                      à vérifier
+                    </span>
+                  <% } %>
+                </td>
+                <td>
+                  <span class="device-main"><%= a.device.browser %> · <%= a.device.os %></span>
+                  <span class="device-kind"><%= a.device.kind %></span>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
   </div>
 
   <% if (categories.length === 0) { %>

@@ -1,0 +1,34 @@
+<section>
+  <h1>Journal du <%= log.name.slice(7, -4) %></h1>
+  <a href="/modules/backups/logs" class="btn btn-secondary" style="margin-bottom: 1rem;">← Tous les journaux</a>
+
+  <% if (log.truncated) { %>
+    <div class="alert alert-danger">
+      Journal volumineux : seule la fin du fichier est affichée.
+    </div>
+  <% } %>
+
+  <div class="card">
+    <div class="card-header"><h2><%= log.name %></h2></div>
+    <div class="log-toolbar">
+      <input type="text" id="log-filter" class="form-control" placeholder="Filtrer les lignes affichées…">
+    </div>
+    <pre class="log-panel" id="log-panel"><%- log.content
+      .split('\n')
+      .map(l => `<span class="log-line">${l.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) || '&nbsp;'}</span>`)
+      .join('\n') %></pre>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const panel = document.getElementById('log-panel');
+    const filterInput = document.getElementById('log-filter');
+    filterInput.addEventListener('input', function () {
+      const term = filterInput.value.toLowerCase();
+      panel.querySelectorAll('.log-line').forEach(function (line) {
+        line.style.display = !term || line.textContent.toLowerCase().includes(term) ? '' : 'none';
+      });
+    });
+  })();
+</script>

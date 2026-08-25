@@ -1,0 +1,49 @@
+<%
+  function size(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
+    return (bytes / 1048576).toFixed(1).replace('.', ',') + ' Mo';
+  }
+%>
+<section>
+  <h1>Journaux de sauvegarde</h1>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <div class="card">
+    <div class="card-header"><h2><%= logs.length %> journal<%= logs.length > 1 ? 'x' : '' %> conservé<%= logs.length > 1 ? 's' : '' %></h2></div>
+
+    <% if (logs.length === 0) { %>
+      <div class="empty-state">
+        <p>Aucun journal lisible.</p>
+        <p class="muted-note">
+          Les journaux sont attendus dans <code><%= logDir %></code>, monté en
+          lecture seule dans la console. Si le dossier n'est pas monté, la liste
+          reste vide même quand les sauvegardes tournent.
+        </p>
+      </div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Taille</th><th>Dernière écriture</th><th></th></tr>
+          </thead>
+          <tbody>
+            <% logs.forEach(f => { %>
+              <tr>
+                <td><%= f.date %></td>
+                <td><%= size(f.size) %></td>
+                <td><%= new Date(f.modifiedAt).toLocaleString('fr-FR') %></td>
+                <td class="row-actions">
+                  <a class="btn btn-secondary" href="/modules/backups/logs/<%= encodeURIComponent(f.name) %>">Consulter</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</section>

@@ -248,6 +248,32 @@ p:last-child {
   overflow-wrap: break-word;
 }
 
+/* Compteurs a lire d'un coup d'oeil : un nombre d'echecs non nul doit sauter
+   aux yeux sans qu'on ait a lire l'intitule de la carte. */
+.stat-value--ok {
+  color: #1e8e3e;
+}
+
+.stat-value--alert {
+  color: #a3272a;
+}
+
+/* Provenance et appareil d'une tentative de connexion : deux informations
+   par cellule, la principale au-dessus, la qualification en dessous. */
+.origin-ip,
+.device-main {
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+
+.origin-country,
+.device-kind {
+  display: inline-block;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
 .category-title {
   font-size: 1rem;
   font-weight: 600;
@@ -501,6 +527,11 @@ p:last-child {
 .badge-success {
   background-color: #e6f4ea;
   color: #1e8e3e;
+}
+
+.badge-danger {
+  background-color: #fbeaea;
+  color: #a3272a;
 }
 
 /* Alertes */

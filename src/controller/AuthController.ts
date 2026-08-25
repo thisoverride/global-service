@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import { inject, injectable } from "inversify";
 import { GET, POST } from "../framework/express/hotspring/hotSpring";
 import { verifyCredentials } from "../core/auth/users";
+import { readOrigin, recordAttempt } from "../core/auth/loginAttempts";
 import { DB_POOL } from "../core/db/token";
 import type { Pool } from "pg";
 
@@ -29,8 +30,14 @@ export default class AuthController {
       ? request.body.next
       : "/";
 
+    // Journalise avant de repondre, succes comme echec : c'est ce qui alimente
+    // le tableau de bord. Volontairement apres la lecture du corps mais avant
+    // la redirection, pour qu'aucun chemin de sortie ne saute l'ecriture.
+    const origin = readOrigin(request);
+
     const user = await verifyCredentials(this._pool, username, password);
     if (!user) {
+      await recordAttempt(this._pool, username, false, origin);
       response.status(401).render("pages/Login", {
         layout: false,
         next,
@@ -38,6 +45,8 @@ export default class AuthController {
       });
       return;
     }
+
+    await recordAttempt(this._pool, username, true, origin);
 
     request.session.regenerate((err) => {
       if (err) {
