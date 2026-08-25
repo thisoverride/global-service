@@ -16,6 +16,8 @@ export interface LoginAttempt {
   ip: string | null;
   peerIp: string | null;
   country: string | null;
+  /** Nom du pays en francais, ou le code brut s'il est inconnu d'Intl. */
+  countryName: string | null;
   userAgent: string | null;
   createdAt: string;
   device: DeviceInfo;
@@ -68,6 +70,20 @@ export async function recordAttempt(
   }
 }
 
+// Les drapeaux emoji ne s'affichent pas du tout sous Windows (la police
+// systeme ne les contient pas) : on resout le nom du pays cote serveur, ce
+// qui est de toute facon plus lisible que deux lettres.
+const COUNTRY_NAMES = new Intl.DisplayNames(["fr"], { type: "region" });
+
+function countryName(code: string | null): string | null {
+  if (!code || !/^[A-Z]{2}$/.test(code)) return code;
+  try {
+    return COUNTRY_NAMES.of(code) ?? code;
+  } catch {
+    return code;
+  }
+}
+
 interface Row {
   id: number;
   username: string;
@@ -87,6 +103,7 @@ function toAttempt(row: Row): LoginAttempt {
     ip: row.ip,
     peerIp: row.peer_ip,
     country: row.country,
+    countryName: countryName(row.country),
     userAgent: row.user_agent,
     createdAt: row.created_at.toISOString(),
     device: parseUserAgent(row.user_agent),

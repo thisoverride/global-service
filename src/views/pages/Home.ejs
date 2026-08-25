@@ -1,10 +1,4 @@
 <%
-  // Drapeau depuis le code pays ISO fourni par Cloudflare (CF-IPCountry) :
-  // 0x1F1E6 est le premier indicatif regional, décalé de 'A'.
-  function flag(code) {
-    if (!code || code.length !== 2 || !/^[A-Z]{2}$/.test(code)) return '';
-    return String.fromCodePoint(...[...code].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
-  }
   function when(iso) {
     return iso ? new Date(iso).toLocaleString('fr-FR') : '—';
   }
@@ -74,7 +68,7 @@
                 <td class="cell-break">
                   <span class="origin-ip"><%= a.ip || '—' %></span>
                   <% if (a.country) { %>
-                    <span class="origin-country"><%= flag(a.country) %> <%= a.country %></span>
+                    <span class="origin-country"><%= a.countryName %></span>
                   <% } %>
                   <% if (a.spoofSuspect) { %>
                     <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= a.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">

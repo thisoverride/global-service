@@ -13,7 +13,7 @@
   <% } %>
 
   <div class="card">
-    <div class="card-header"><h2><%= logs.length %> journal<%= logs.length > 1 ? 'x' : '' %> conservé<%= logs.length > 1 ? 's' : '' %></h2></div>
+    <div class="card-header"><h2><%= logs.length %> <%= logs.length > 1 ? 'journaux conservés' : 'journal conservé' %></h2></div>
 
     <% if (logs.length === 0) { %>
       <div class="empty-state">

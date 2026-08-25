@@ -90,7 +90,7 @@
       <% if (logs.length === 0) { %>
         <p class="muted-note">Aucun journal lisible depuis la console.</p>
       <% } else { %>
-        <p><%= logs.length %> journal<%= logs.length > 1 ? 'x' : '' %> disponible<%= logs.length > 1 ? 's' : '' %>, du <%= logs[logs.length - 1].date %> au <%= logs[0].date %>.</p>
+        <p><%= logs.length %> <%= logs.length > 1 ? 'journaux disponibles' : 'journal disponible' %>, du <%= logs[logs.length - 1].date %> au <%= logs[0].date %>.</p>
       <% } %>
       <a class="btn btn-secondary" href="/modules/backups/logs">Consulter les journaux</a>
     </div>

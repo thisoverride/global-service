@@ -1,5 +1,10 @@
+<%
+  // "backup-2026-08-25.log" -> "25 août 2026"
+  const day = new Date(log.name.slice(7, -4) + 'T12:00:00')
+    .toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+%>
 <section>
-  <h1>Journal du <%= log.name.slice(7, -4) %></h1>
+  <h1>Journal du <%= day %></h1>
   <a href="/modules/backups/logs" class="btn btn-secondary" style="margin-bottom: 1rem;">← Tous les journaux</a>
 
   <% if (log.truncated) { %>
@@ -16,7 +21,7 @@
     <pre class="log-panel" id="log-panel"><%- log.content
       .split('\n')
       .map(l => `<span class="log-line">${l.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) || '&nbsp;'}</span>`)
-      .join('\n') %></pre>
+      .join('') %></pre>
   </div>
 </section>
 
