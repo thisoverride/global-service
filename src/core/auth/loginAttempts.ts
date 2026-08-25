@@ -125,6 +125,40 @@ export async function getRecentAttempts(pool: Pool, limit = 20): Promise<LoginAt
   return rows.map(toAttempt);
 }
 
+export type AttemptFilter = "all" | "success" | "failed";
+
+export interface AttemptPage {
+  attempts: LoginAttempt[];
+  total: number;
+}
+
+// Page d'historique, filtree et paginee. Le filtre est un litteral fige (pas
+// une valeur d'URL interpolee) : l'utilisateur choisit parmi trois cas, il
+// n'ecrit jamais de SQL.
+export async function getAttemptPage(
+  pool: Pool,
+  filter: AttemptFilter,
+  limit: number,
+  offset: number,
+): Promise<AttemptPage> {
+  const where =
+    filter === "success" ? "WHERE success" : filter === "failed" ? "WHERE NOT success" : "";
+
+  const [page, count] = await Promise.all([
+    pool.query<Row>(
+      `SELECT id, username, success, ip, peer_ip, country, user_agent, created_at
+         FROM login_attempts
+         ${where}
+        ORDER BY created_at DESC
+        LIMIT $1 OFFSET $2`,
+      [limit, offset],
+    ),
+    pool.query<{ total: string }>(`SELECT count(*)::int AS total FROM login_attempts ${where}`),
+  ]);
+
+  return { attempts: page.rows.map(toAttempt), total: Number(count.rows[0].total) || 0 };
+}
+
 export async function getStats(pool: Pool, days = 7): Promise<AttemptStats> {
   const { rows } = await pool.query<{
     success: string;

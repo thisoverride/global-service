@@ -27,13 +27,11 @@
 
   <div class="card">
     <div class="card-header">
-      <h2>Tentatives de connexion</h2>
-      <% if (stats.lastFailureAt) { %>
-        <span class="badge badge-danger">Dernier échec : <%= when(stats.lastFailureAt) %></span>
-      <% } %>
+      <h2>Dernière tentative de connexion</h2>
+      <a class="btn btn-secondary" href="/modules/logins">Voir l'historique des connexions</a>
     </div>
 
-    <% if (attempts.length === 0) { %>
+    <% if (!lastAttempt) { %>
       <div class="empty-state">
         <p>Aucune tentative enregistrée pour l'instant.</p>
         <p class="muted-note">
@@ -54,34 +52,32 @@
             </tr>
           </thead>
           <tbody>
-            <% attempts.forEach(a => { %>
-              <tr>
-                <td><%= when(a.createdAt) %></td>
-                <td>
-                  <% if (a.success) { %>
-                    <span class="badge badge-success">Réussie</span>
-                  <% } else { %>
-                    <span class="badge badge-danger">Échouée</span>
-                  <% } %>
-                </td>
-                <td class="cell-break"><%= a.username || '—' %></td>
-                <td class="cell-break">
-                  <span class="origin-ip"><%= a.ip || '—' %></span>
-                  <% if (a.country) { %>
-                    <span class="origin-country"><%= a.countryName %></span>
-                  <% } %>
-                  <% if (a.spoofSuspect) { %>
-                    <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= a.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">
-                      à vérifier
-                    </span>
-                  <% } %>
-                </td>
-                <td>
-                  <span class="device-main"><%= a.device.browser %> · <%= a.device.os %></span>
-                  <span class="device-kind"><%= a.device.kind %></span>
-                </td>
-              </tr>
-            <% }) %>
+            <tr>
+              <td><%= when(lastAttempt.createdAt) %></td>
+              <td>
+                <% if (lastAttempt.success) { %>
+                  <span class="badge badge-success">Réussie</span>
+                <% } else { %>
+                  <span class="badge badge-danger">Échouée</span>
+                <% } %>
+              </td>
+              <td class="cell-break"><%= lastAttempt.username || '—' %></td>
+              <td class="cell-break">
+                <span class="origin-ip"><%= lastAttempt.ip || '—' %></span>
+                <% if (lastAttempt.countryName) { %>
+                  <span class="origin-country"><%= lastAttempt.countryName %></span>
+                <% } %>
+                <% if (lastAttempt.spoofSuspect) { %>
+                  <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= lastAttempt.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">
+                    à vérifier
+                  </span>
+                <% } %>
+              </td>
+              <td>
+                <span class="device-main"><%= lastAttempt.device.browser %> · <%= lastAttempt.device.os %></span>
+                <span class="device-kind"><%= lastAttempt.device.kind %></span>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

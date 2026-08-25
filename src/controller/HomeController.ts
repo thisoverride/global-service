@@ -17,16 +17,18 @@ export default class HomeController {
   public async renderHome(request: Request, response: Response): Promise<void> {
     // menuServices et currentUser sont déjà dans res.locals (middleware global,
     // voir ExpressApplication) : tout autre module en bénéficie sans rien faire.
-    const [stats, attempts] = await Promise.all([
+    // L'historique complet vit dans le module Connexions : le tableau de bord
+    // n'affiche que la derniere ligne et y renvoie.
+    const [stats, recent] = await Promise.all([
       getStats(this._pool),
-      getRecentAttempts(this._pool),
+      getRecentAttempts(this._pool, 1),
     ]);
 
     response.render("pages/Home", {
       moduleCount: this._moduleLoader.getModuleCount(),
       categories: this._moduleLoader.getServicesByCategory(),
       stats,
-      attempts,
+      lastAttempt: recent[0] ?? null,
     });
   }
 

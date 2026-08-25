@@ -1,0 +1,113 @@
+<%
+  function when(iso) { return iso ? new Date(iso).toLocaleString('fr-FR') : '—'; }
+  function link(f, p) {
+    const q = new URLSearchParams();
+    if (f !== 'all') q.set('filter', f);
+    if (p > 1) q.set('page', String(p));
+    const s = q.toString();
+    return '/modules/logins' + (s ? '?' + s : '');
+  }
+  const filters = [['all', 'Toutes'], ['failed', 'Échouées'], ['success', 'Réussies']];
+%>
+<section>
+  <h1>Connexions</h1>
+
+  <div class="dashboard-grid dashboard-grid--wide">
+    <div class="stat-card">
+      <h3>Connexions réussies (7 j)</h3>
+      <div class="stat-value stat-value--ok"><%= stats.success %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Tentatives échouées (7 j)</h3>
+      <div class="stat-value <%= stats.failed > 0 ? 'stat-value--alert' : '' %>"><%= stats.failed %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Adresses distinctes (7 j)</h3>
+      <div class="stat-value"><%= stats.distinctIps %></div>
+    </div>
+    <div class="stat-card">
+      <h3>Dernier échec</h3>
+      <div class="stat-value stat-value--text"><%= when(stats.lastFailureAt) %></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><%= total %> tentative<%= total > 1 ? 's' : '' %></h2>
+      <div class="row-actions">
+        <% filters.forEach(([value, label]) => { %>
+          <a class="btn <%= filter === value ? 'btn-primary' : 'btn-secondary' %>" href="<%= link(value, 1) %>"><%= label %></a>
+        <% }) %>
+      </div>
+    </div>
+
+    <% if (attempts.length === 0) { %>
+      <div class="empty-state">
+        <p>Aucune tentative pour ce filtre.</p>
+      </div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Quand</th>
+              <th>Résultat</th>
+              <th>Identifiant</th>
+              <th>Provenance</th>
+              <th>Appareil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% attempts.forEach(a => { %>
+              <tr>
+                <td><%= when(a.createdAt) %></td>
+                <td>
+                  <% if (a.success) { %>
+                    <span class="badge badge-success">Réussie</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">Échouée</span>
+                  <% } %>
+                </td>
+                <td class="cell-break"><%= a.username || '—' %></td>
+                <td class="cell-break">
+                  <span class="origin-ip"><%= a.ip || '—' %></span>
+                  <% if (a.countryName) { %>
+                    <span class="origin-country"><%= a.countryName %></span>
+                  <% } %>
+                  <% if (a.spoofSuspect) { %>
+                    <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= a.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">
+                      à vérifier
+                    </span>
+                  <% } %>
+                </td>
+                <td>
+                  <span class="device-main"><%= a.device.browser %> · <%= a.device.os %></span>
+                  <span class="device-kind"><%= a.device.kind %></span>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if (pageCount > 1) { %>
+        <div class="pagination">
+          <% if (page > 1) { %>
+            <a class="btn btn-secondary" href="<%= link(filter, page - 1) %>">← Précédent</a>
+          <% } %>
+          <span class="pagination-position">Page <%= page %> sur <%= pageCount %></span>
+          <% if (page < pageCount) { %>
+            <a class="btn btn-secondary" href="<%= link(filter, page + 1) %>">Suivant →</a>
+          <% } %>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+
+  <p class="muted-note">
+    La console est servie derrière Cloudflare : l'adresse affichée est celle
+    annoncée par le proxy (<code>CF-Connecting-IP</code>). Une ligne marquée
+    « à vérifier » signale une requête arrivée directement sur l'origine avec
+    une adresse déclarée qui ne correspond pas au pair réel.
+  </p>
+</section>
