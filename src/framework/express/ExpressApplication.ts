@@ -56,6 +56,11 @@ export default class ExpressApplication {
       // Sert a marquer l'entree active dans la barre laterale.
       res.locals.currentPath = req.path;
       res.locals.currentUser = req.session.username;
+      // Formatage des dates expose a toutes les vues : la copie de cette
+      // fonction dans chaque template etait la porte ouverte a des formats
+      // divergents d'une page a l'autre.
+      res.locals.formatDateTime = (iso?: string | null) =>
+        iso ? new Date(iso).toLocaleString('fr-FR') : '—';
       next();
     });
 

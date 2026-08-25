@@ -1,5 +1,4 @@
 <%
-  function when(iso) { return iso ? new Date(iso).toLocaleString('fr-FR') : '—'; }
   function link(f, p) {
     const q = new URLSearchParams();
     if (f !== 'all') q.set('filter', f);
@@ -27,7 +26,7 @@
     </div>
     <div class="stat-card">
       <h3>Dernier échec</h3>
-      <div class="stat-value stat-value--text"><%= when(stats.lastFailureAt) %></div>
+      <div class="stat-value stat-value--text"><%= formatDateTime(stats.lastFailureAt) %></div>
     </div>
   </div>
 
@@ -60,30 +59,11 @@
           <tbody>
             <% attempts.forEach(a => { %>
               <tr>
-                <td><%= when(a.createdAt) %></td>
-                <td>
-                  <% if (a.success) { %>
-                    <span class="badge badge-success">Réussie</span>
-                  <% } else { %>
-                    <span class="badge badge-danger">Échouée</span>
-                  <% } %>
-                </td>
+                <td><%= formatDateTime(a.createdAt) %></td>
+                <td><%- include('partials/attempt/result', { attempt: a }) %></td>
                 <td class="cell-break"><%= a.username || '—' %></td>
-                <td class="cell-break">
-                  <span class="origin-ip"><%= a.ip || '—' %></span>
-                  <% if (a.countryName) { %>
-                    <span class="origin-country"><%= a.countryName %></span>
-                  <% } %>
-                  <% if (a.spoofSuspect) { %>
-                    <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= a.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">
-                      à vérifier
-                    </span>
-                  <% } %>
-                </td>
-                <td>
-                  <span class="device-main"><%= a.device.browser %> · <%= a.device.os %></span>
-                  <span class="device-kind"><%= a.device.kind %></span>
-                </td>
+                <td class="cell-break"><%- include('partials/attempt/origin', { attempt: a }) %></td>
+                <td><%- include('partials/attempt/device', { attempt: a }) %></td>
               </tr>
             <% }) %>
           </tbody>

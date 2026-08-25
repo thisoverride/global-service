@@ -1,16 +1,9 @@
-<%
-  function when(iso) {
-    return iso ? new Date(iso).toLocaleString('fr-FR') : '—';
-  }
-%>
 <section class="home-console" id="dashboard">
   <h1>Console</h1>
 
+  <h2 class="section-title">Sécurité</h2>
+
   <div class="dashboard-grid dashboard-grid--wide">
-    <div class="stat-card">
-      <h3>Modules installés</h3>
-      <div class="stat-value"><%= moduleCount %></div>
-    </div>
     <div class="stat-card">
       <h3>Connexions réussies (7 j)</h3>
       <div class="stat-value stat-value--ok"><%= stats.success %></div>
@@ -40,49 +33,39 @@
         </p>
       </div>
     <% } else { %>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Quand</th>
-              <th>Résultat</th>
-              <th>Identifiant</th>
-              <th>Provenance</th>
-              <th>Appareil</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><%= when(lastAttempt.createdAt) %></td>
-              <td>
-                <% if (lastAttempt.success) { %>
-                  <span class="badge badge-success">Réussie</span>
-                <% } else { %>
-                  <span class="badge badge-danger">Échouée</span>
-                <% } %>
-              </td>
-              <td class="cell-break"><%= lastAttempt.username || '—' %></td>
-              <td class="cell-break">
-                <span class="origin-ip"><%= lastAttempt.ip || '—' %></span>
-                <% if (lastAttempt.countryName) { %>
-                  <span class="origin-country"><%= lastAttempt.countryName %></span>
-                <% } %>
-                <% if (lastAttempt.spoofSuspect) { %>
-                  <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= lastAttempt.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">
-                    à vérifier
-                  </span>
-                <% } %>
-              </td>
-              <td>
-                <span class="device-main"><%= lastAttempt.device.browser %> · <%= lastAttempt.device.os %></span>
-                <span class="device-kind"><%= lastAttempt.device.kind %></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <%# Une seule tentative : des champs etiquetes se lisent mieux qu'un
+          tableau a cinq colonnes dont le corps ne compte qu'une ligne. %>
+      <div class="card-body">
+        <dl class="field-grid">
+          <div class="field">
+            <dt>Résultat</dt>
+            <dd><%- include('partials/attempt/result', { attempt: lastAttempt }) %></dd>
+          </div>
+          <div class="field">
+            <dt>Quand</dt>
+            <dd><%= formatDateTime(lastAttempt.createdAt) %></dd>
+          </div>
+          <div class="field">
+            <dt>Identifiant</dt>
+            <dd class="cell-break"><%= lastAttempt.username || '—' %></dd>
+          </div>
+          <div class="field">
+            <dt>Provenance</dt>
+            <dd class="cell-break"><%- include('partials/attempt/origin', { attempt: lastAttempt }) %></dd>
+          </div>
+          <div class="field">
+            <dt>Appareil</dt>
+            <dd><%- include('partials/attempt/device', { attempt: lastAttempt }) %></dd>
+          </div>
+        </dl>
       </div>
     <% } %>
   </div>
+
+  <h2 class="section-title">
+    Services
+    <span class="section-count"><%= moduleCount %> module<%= moduleCount > 1 ? 's' : '' %></span>
+  </h2>
 
   <% if (categories.length === 0) { %>
     <div class="card">
@@ -92,7 +75,7 @@
     </div>
   <% } else { %>
     <% categories.forEach(group => { %>
-      <h2 class="category-title"><%= group.category %></h2>
+      <h3 class="category-title"><%= group.category %></h3>
       <div class="tiles-grid">
         <% group.items.forEach(item => { %>
           <a href="<%= item.url %>" class="service-tile">

@@ -1,0 +1,11 @@
+<%# Provenance d'une tentative : adresse, pays, et l'alerte d'en-tete forgee.
+    Attend : attempt %>
+<span class="origin-ip"><%= attempt.ip || '—' %></span>
+<% if (attempt.countryName) { %>
+  <span class="origin-country"><%= attempt.countryName %></span>
+<% } %>
+<% if (attempt.spoofSuspect) { %>
+  <span class="badge badge-danger" title="Adresse annoncée différente du pair réel (<%= attempt.peerIp %>), sans passage par Cloudflare : en-tête possiblement forgée.">
+    à vérifier
+  </span>
+<% } %>

@@ -1037,3 +1037,49 @@ th {
   font-size: 0.875rem;
   color: var(--text-light);
 }
+
+/* Titre de grande section du tableau de bord ("Sécurité", "Services"). Se
+   distingue de .category-title, qui reste le sous-niveau (les categories de
+   modules vivent a l'interieur de la section Services). */
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.section-title:first-of-type {
+  margin-top: 1rem;
+}
+
+.section-count {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+/* Champs etiquetes pour un enregistrement unique : preferable a un tableau
+   dont l'en-tete pese autant que la seule ligne de donnees. */
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+}
+
+.field dt {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-light);
+  margin-bottom: 0.35rem;
+}
+
+.field dd {
+  margin: 0;
+  color: var(--text-dark);
+}
