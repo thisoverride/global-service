@@ -36,5 +36,18 @@ export const configureMiddleware = (app: Application): void => {
   app.use(expressLayouts as unknown as express.RequestHandler);
   app.set('layout', 'layouts/main');
 
-  app.use(express.static(path.join(PROJECT_ROOT, 'public')));
+  // "no-cache" ne veut pas dire "ne cache pas" : le fichier est conserve, mais
+  // revalide a chaque fois (304 s'il n'a pas bouge). Sans cette en-tete,
+  // Cloudflare applique son TTL par defaut de 4 h aux .css/.js ; un
+  // deploiement livrait alors le nouveau HTML avec l'ancienne feuille de
+  // style, et la page s'affichait sans aucun style. L'empreinte de contenu
+  // posee sur les URL (core/assets.ts) couvre les points d'entree ; ceci
+  // couvre aussi les modules ES importes en cascade, dont l'URL est ecrite
+  // dans le JS et non dans le HTML.
+  app.use(
+    express.static(path.join(PROJECT_ROOT, 'public'), {
+      etag: true,
+      setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache'),
+    }),
+  );
 };

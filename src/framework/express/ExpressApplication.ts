@@ -14,6 +14,7 @@ import { createSessionMiddleware } from '../../core/auth/session';
 import { requireAuth } from '../../core/auth/requireAuth';
 import { ModuleLoader } from '../../core/modules/ModuleLoader';
 import * as path from 'path';
+import { assetUrl } from '../../core/assets';
 
 export default class ExpressApplication {
   private app: Application;
@@ -59,6 +60,8 @@ export default class ExpressApplication {
       // Formatage des dates expose a toutes les vues : la copie de cette
       // fonction dans chaque template etait la porte ouverte a des formats
       // divergents d'une page a l'autre.
+      // Empreinte de contenu sur les URL d'assets : voir core/assets.ts.
+      res.locals.asset = assetUrl;
       res.locals.formatDateTime = (iso?: string | null) =>
         iso ? new Date(iso).toLocaleString('fr-FR') : '—';
       next();
