@@ -42,6 +42,13 @@ COPY --from=builder /app/build ./build
 COPY public/ ./public/
 
 ENV NODE_ENV=production
+
+# Sans TZ, le conteneur tourne en UTC : toutes les dates affichees par la
+# console (tentatives de connexion, sauvegardes, journaux) apparaissaient
+# deux heures avant l'heure reelle du serveur. tzdata est deja dans l'image
+# de base node:22-slim, il n'y a que la variable a poser.
+ENV TZ=Europe/Paris
+
 EXPOSE 3000
 
 CMD ["node", "build/main.js"]

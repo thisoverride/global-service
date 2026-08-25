@@ -77,7 +77,11 @@ export default class ExpressApplication {
     configureErrorHandling(this.app);
 
     this.app.listen(port, () => {
-      console.info('\x1b[1m\x1b[36m%s\x1b[0m', `Console sur http://localhost:${port}`);
+      // Trace le fuseau resolu : c'est lui qui date tout ce que la console
+      // affiche. Le voir au demarrage rend une regression de TZ evidente
+      // dans les logs, au lieu de se manifester par des heures fausses.
+      const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      console.info('\x1b[1m\x1b[36m%s\x1b[0m', `Console sur http://localhost:${port} (fuseau : ${zone})`);
     });
   }
 }
