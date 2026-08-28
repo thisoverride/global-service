@@ -67,10 +67,6 @@ p:last-child {
   padding: 2rem;
 }
 
-.main-content > * {
-  max-width: 1160px;
-}
-
 /* Barre latérale */
 .sidebar {
   flex: none;
