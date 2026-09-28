@@ -17,7 +17,14 @@ export const configureMiddleware = (app: Application): void => {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'"],
+          // cdnjs sert deja les styles FontAwesome ; il fournit aussi hls.js,
+          // dont le module Smarthink a besoin pour lire le flux de la webcam.
+          scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
+          // hls.js alimente la balise <video> par Media Source Extensions et
+          // cree ses workers depuis des blob: — sans ces deux directives, le
+          // lecteur est bloque sans message d'erreur explicite.
+          mediaSrc: ["'self'", 'blob:'],
+          workerSrc: ["'self'", 'blob:'],
           styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
           fontSrc: ["'self'", 'https://cdnjs.cloudflare.com', 'data:'],
           imgSrc: ["'self'", 'data:'],

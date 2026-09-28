@@ -1,0 +1,47 @@
+<%
+  function duree(s) {
+    if (!s) return '—';
+    const m = Math.floor(s / 60), r = Math.round(s % 60);
+    return m > 0 ? `${m} min ${String(r).padStart(2,'0')} s` : `${r} s`;
+  }
+%>
+<section>
+  <h1>Enregistrements</h1>
+
+  <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><%= recordings.length %> segment<%= recordings.length > 1 ? 's' : '' %></h2>
+      <a class="btn btn-secondary" href="/modules/smarthink">← Direct</a>
+    </div>
+
+    <% if (recordings.length === 0) { %>
+      <div class="empty-state">
+        <p>Aucun enregistrement.</p>
+        <p class="muted-note">
+          L'enregistrement se déclenche depuis la page Direct. Il découpe le flux
+          en segments de dix minutes et supprime automatiquement ceux de plus de
+          sept jours — sans quoi le disque se remplirait d'environ neuf gigaoctets
+          par jour.
+        </p>
+      </div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Début</th><th>Durée</th><th></th></tr></thead>
+          <tbody>
+            <% recordings.forEach(r => { %>
+              <tr>
+                <td><%= formatDateTime(r.start) %></td>
+                <td><%= duree(r.duration) %></td>
+                <td class="row-actions"><a class="btn btn-secondary" href="<%= r.url %>">Télécharger</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</section>

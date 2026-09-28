@@ -23,6 +23,8 @@ FROM node:22-slim AS runner
 # protocole pickle sur socket UNIX, illisible depuis Node (voir
 # modules/fail2ban/f2b.py). On installe l'interpréteur, pas le paquet
 # fail2ban complet — inutile d'embarquer un second serveur dans l'image.
+# openssh-client : le module Smarthink pilote la seconde machine par SSH
+# (etat, service de diffusion, capture d'image, redemarrage).
 # NB : "python3" et non "python3-minimal", qui fournit l'interpréteur SANS
 # la bibliothèque standard — json, socket et pickle y manquent.
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -31,6 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       genisoimage \
       python3 \
       ca-certificates \
+      openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

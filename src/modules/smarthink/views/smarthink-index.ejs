@@ -1,0 +1,138 @@
+<section>
+  <h1>Smarthink</h1>
+
+  <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <% if (!status.reachable) { %>
+    <div class="alert alert-danger">
+      <strong>Machine injoignable</strong><% if (status.problem) { %> — <%= status.problem %><% } %>
+    </div>
+  <% } else { %>
+
+    <div class="metric-row">
+      <div class="metric">
+        <span class="metric-label">Processeur</span>
+        <span class="metric-value <%= (status.cpuPercent ?? 0) > 85 ? 'metric-value--alert' : '' %>"><%= status.cpuPercent === null ? '—' : status.cpuPercent + ' %' %></span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Mémoire</span>
+        <span class="metric-value metric-value--text"><%= status.memUsed %> / <%= status.memTotal %></span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Disque</span>
+        <span class="metric-value <%= status.diskPercent > 85 ? 'metric-value--alert' : '' %>"><%= status.diskPercent %> %</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Température</span>
+        <span class="metric-value metric-value--text"><%= status.temperature || '—' %></span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">En ligne depuis</span>
+        <span class="metric-value metric-value--text"><%= status.uptime %></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Direct
+          <% if (stream.live) { %>
+            <span class="badge badge-success">en cours</span>
+          <% } else { %>
+            <span class="badge badge-danger">hors ligne</span>
+          <% } %>
+          <% if (stream.recording) { %><span class="badge badge-danger">● enregistrement</span><% } %>
+        </h2>
+        <div class="row-actions">
+          <form method="post" action="/modules/smarthink/record" style="display:inline">
+            <input type="hidden" name="state" value="<%= stream.recording ? 'off' : 'on' %>">
+            <button class="btn <%= stream.recording ? 'btn-secondary' : 'btn-primary' %>" <%= stream.live ? '' : 'disabled' %>>
+              <%= stream.recording ? 'Arrêter l\'enregistrement' : 'Enregistrer' %>
+            </button>
+          </form>
+          <a class="btn btn-secondary" href="/modules/smarthink/snapshot">Capturer une image</a>
+        </div>
+      </div>
+
+      <% if (!stream.live) { %>
+        <div class="empty-state">
+          <p>Aucun flux publié.</p>
+          <% if (stream.problem) { %><p class="muted-note"><%= stream.problem %></p><% } %>
+          <p class="muted-note">
+            Le service <code>mediamtx</code> est <%= status.serviceActive ? 'actif' : 'arrêté' %> sur la machine.
+          </p>
+        </div>
+      <% } else { %>
+        <div class="card-body">
+          <video id="player" controls autoplay muted playsinline class="webcam-player"></video>
+          <p class="muted-note" id="player-note">
+            HLS basse latence — environ une seconde de décalage. Le son est celui
+            du micro interne de la machine, la webcam n'en possède pas.
+            <%= stream.readers %> lecteur<%= stream.readers > 1 ? 's' : '' %> connecté<%= stream.readers > 1 ? 's' : '' %>.
+          </p>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>Machine</h2></div>
+      <div class="table-container">
+        <table>
+          <tbody>
+            <tr><th>Nom</th><td><%= status.hostname %></td></tr>
+            <tr><th>Système</th><td><%= status.os %> — noyau <%= status.kernel %></td></tr>
+            <tr><th>Charge</th><td><%= status.load %></td></tr>
+            <tr><th>Service de diffusion</th>
+                <td><%= status.serviceActive ? 'actif' : 'arrêté' %></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-body">
+        <div class="row-actions">
+          <form method="post" action="/modules/smarthink/service/restart" style="display:inline">
+            <button class="btn btn-secondary">Redémarrer la diffusion</button>
+          </form>
+          <form method="post" action="/modules/smarthink/service/<%= status.serviceActive ? 'stop' : 'start' %>" style="display:inline">
+            <button class="btn btn-secondary"><%= status.serviceActive ? 'Arrêter la diffusion' : 'Démarrer la diffusion' %></button>
+          </form>
+          <form method="post" action="/modules/smarthink/power/reboot" style="display:inline"
+                onsubmit="return confirm('Redémarrer la machine smarthink ?')">
+            <button class="btn btn-secondary">Redémarrer la machine</button>
+          </form>
+          <form method="post" action="/modules/smarthink/power/poweroff" style="display:inline"
+                onsubmit="return confirm('Éteindre la machine ? Elle ne pourra pas être rallumée à distance.')">
+            <button class="btn btn-secondary">Éteindre</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<% if (status.reachable && stream.live) { %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.15/hls.min.js"></script>
+<script>
+  (function () {
+    var video = document.getElementById('player');
+    var note = document.getElementById('player-note');
+    var src = '/modules/smarthink/hls/index.m3u8';
+
+    function fail(reason) { note.textContent = 'Lecture impossible : ' + reason; }
+
+    // Safari lit le HLS nativement ; les autres navigateurs passent par hls.js.
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = src;
+      video.addEventListener('error', function () { fail('flux refusé par le lecteur'); });
+    } else if (window.Hls && window.Hls.isSupported()) {
+      var hls = new Hls({ lowLatencyMode: true, backBufferLength: 10 });
+      hls.loadSource(src);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.ERROR, function (_e, data) {
+        if (data.fatal) fail(data.details || 'erreur fatale');
+      });
+    } else {
+      fail('ce navigateur ne sait pas lire le HLS');
+    }
+  })();
+</script>
+<% } %>
