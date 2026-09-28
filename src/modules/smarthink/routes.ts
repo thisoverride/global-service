@@ -33,8 +33,10 @@ export function buildRouter(): Router {
   // Le navigateur ne peut pas joindre 192.168.1.44 depuis l'exterieur : la
   // console relaie donc le HLS, qui n'est que du HTTP. C'est aussi ce qui
   // place le flux derriere l'authentification de la console.
-  router.get("/hls/*path", async (req, res) => {
-    const rel = (req.params as { path?: string[] }).path?.join("/") ?? "";
+  // Express 4 : le joker se lit dans params[0], la syntaxe nommee "*path"
+  // n'arrive qu'avec Express 5 et ne correspondait donc a aucune route.
+  router.get("/hls/*", async (req, res) => {
+    const rel = String((req.params as Record<string, string>)[0] ?? "");
     // Le chemin vient de l'URL : on interdit toute remontee d'arborescence.
     if (rel.includes("..")) {
       res.status(400).end();
