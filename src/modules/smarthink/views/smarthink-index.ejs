@@ -116,23 +116,51 @@
     var video = document.getElementById('player');
     var note = document.getElementById('player-note');
     var src = '/modules/smarthink/hls/index.m3u8';
+    var triedHlsJs = false;
 
-    function fail(reason) { note.textContent = 'Lecture impossible : ' + reason; }
+    function fail(reason) {
+      note.textContent = 'Lecture impossible : ' + reason;
+      note.className = 'alert alert-danger';
+    }
 
-    // Safari lit le HLS nativement ; les autres navigateurs passent par hls.js.
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = src;
-      video.addEventListener('error', function () { fail('flux refusé par le lecteur'); });
-    } else if (window.Hls && window.Hls.isSupported()) {
+    // Diagnostic utile plutot qu'un message opaque : la cause la plus probable
+    // est un profil H.264 que le navigateur ne sait pas decoder (High 4:2:2,
+    // produit quand la camera sort du YUYV sans conversion en 4:2:0).
+    function explain(detail) {
+      fetch(src).then(function (r) { return r.text(); }).then(function (txt) {
+        var m = txt.match(/CODECS="([^"]+)"/);
+        var codecs = m ? m[1] : null;
+        if (codecs && !MediaSource.isTypeSupported('video/mp4; codecs="' + codecs + '"')) {
+          fail('le navigateur ne sait pas décoder ' + codecs +
+               ' — profil vidéo incompatible, la conversion en 4:2:0 est nécessaire côté machine.');
+        } else {
+          fail(detail || 'flux refusé par le lecteur');
+        }
+      }).catch(function () { fail(detail || 'flux injoignable'); });
+    }
+
+    function useHlsJs() {
+      if (triedHlsJs || !window.Hls || !window.Hls.isSupported()) {
+        explain('aucun lecteur HLS disponible');
+        return;
+      }
+      triedHlsJs = true;
       var hls = new Hls({ lowLatencyMode: true, backBufferLength: 10 });
       hls.loadSource(src);
       hls.attachMedia(video);
       hls.on(Hls.Events.ERROR, function (_e, data) {
-        if (data.fatal) fail(data.details || 'erreur fatale');
+        if (data.fatal) explain(data.details);
       });
+    }
+
+    // Safari annonce lire le HLS nativement, mais son lecteur echoue sans
+    // expliquer pourquoi : en cas d'echec on bascule sur hls.js, qui sait
+    // dire ce qui bloque.
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = src;
+      video.addEventListener('error', useHlsJs, { once: true });
     } else {
-      fail('ce navigateur ne sait pas lire le HLS');
+      useHlsJs();
     }
   })();
 </script>
-<% } %>
