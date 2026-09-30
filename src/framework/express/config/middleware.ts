@@ -25,6 +25,10 @@ export const configureMiddleware = (app: Application): void => {
           // lecteur est bloque sans message d'erreur explicite.
           mediaSrc: ["'self'", 'blob:'],
           workerSrc: ["'self'", 'blob:'],
+          // Safari n'implemente pas worker-src et applique child-src a la
+          // place : sans cette ligne il bloque le worker blob: de hls.js,
+          // la ou Chrome et Firefox l'autorisent.
+          childSrc: ["'self'", 'blob:'],
           styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
           fontSrc: ["'self'", 'https://cdnjs.cloudflare.com', 'data:'],
           imgSrc: ["'self'", 'data:'],
