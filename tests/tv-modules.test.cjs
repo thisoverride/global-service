@@ -61,10 +61,11 @@ test('player parsing reads only advertised data and rejects DRM playlists', () =
   assert.throws(() => validatePlaylist(Buffer.from('#EXTM3U\n#EXT-X-KEY:METHOD=SAMPLE-AES,URI="key"')),/DRM/);
 });
 test('playback resolves public HLS data, rewrites segments and stops after token revocation', async () => {
+  const transportStream = Buffer.alloc(376); transportStream[0] = transportStream[188] = 0x47;
   const responses = new Map([
     ['https://source.example/stream/game', { body: Buffer.from('<video src="https://cdn.example/live.m3u8"></video>'), type: 'text/html' }],
     ['https://cdn.example/live.m3u8', { body: Buffer.from('#EXTM3U\n#EXTINF:5,\nchunk.ts\n'), type: 'application/vnd.apple.mpegurl' }],
-    ['https://cdn.example/chunk.ts', { body: Buffer.from('video bytes'), type: 'video/mp2t' }],
+    ['https://cdn.example/chunk.ts', { body: transportStream, type: 'text/plain' }],
   ]);
   const fetcher = async url => { const item = responses.get(url.href); if (!item) throw new Error('missing fixture'); return { body: item.body, url, headers: { 'content-type': item.type }, status: 200 }; };
   const playback = new Playback(fetcher), token = 'a'.repeat(64), hash = createHash('sha256').update(token).digest('hex');
@@ -73,7 +74,8 @@ test('playback resolves public HLS data, rewrites segments and stops after token
   const current = async value => value === hash;
   const playlist = await playback.media(match[1], match[2], current);
   assert.match(playlist.body.toString(), new RegExp('/media/' + match[1] + '/1'));
-  assert.equal((await playback.media(match[1], '1', current)).body.toString(), 'video bytes');
+  const segment = await playback.media(match[1], '1', current);
+  assert.equal(segment.contentType, 'video/mp2t'); assert.deepEqual(segment.body, transportStream);
   await assert.rejects(playback.media(match[1], match[2], async () => false), /expirée/);
 });
 test('device pairing is single-use, expires, stores only hashes, and revokes former token', async () => {

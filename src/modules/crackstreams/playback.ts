@@ -38,6 +38,19 @@ export function validatePlaylist(body: Buffer): string {
   return text;
 }
 
+function mediaContentType(raw: unknown, body: Buffer): string | null {
+  const type = String(raw || '').split(';')[0].trim().toLowerCase();
+  if (/^(video\/|audio\/|application\/octet-stream$)/.test(type)) return type;
+  // Some streaming hosts incorrectly label binary HLS segments as text/plain.
+  // Accept only recognizable media container signatures, never arbitrary text
+  // or an HTML/JSON error page masquerading as a segment.
+  if (body.length >= 188 && body[0] === 0x47 && (body.length < 376 || body[188] === 0x47)) return 'video/mp2t';
+  if (body.length >= 8 && ['ftyp', 'styp', 'moof', 'mdat'].includes(body.subarray(4, 8).toString('ascii'))) return 'video/mp4';
+  if (body.length >= 10 && body.subarray(0, 3).toString('ascii') === 'ID3') return 'audio/mpeg';
+  if (body.length >= 2 && body[0] === 0xff && (body[1] & 0xf6) === 0xf0) return 'audio/aac';
+  return null;
+}
+
 interface PlaybackSession {
   tokenHash: string; expires: number; created: number; referer: string;
   resources: Map<string, string>; byUrl: Map<string, string>; nextId: number;
@@ -125,8 +138,8 @@ export class Playback {
         }).join('\n');
         return { body: Buffer.from(rewritten), contentType: 'application/vnd.apple.mpegurl', status: 200, contentRange: undefined };
       }
-      const type = String(response.headers['content-type'] || 'application/octet-stream').split(';')[0];
-      if (!/^(video\/|audio\/|application\/octet-stream$)/.test(type)) throw new InputError('La source ne renvoie pas de vidéo.', 502);
+      const type = mediaContentType(response.headers['content-type'], response.body);
+      if (!type) throw new InputError('La source ne renvoie pas de vidéo compatible.', 502);
       return { body: response.body, contentType: type, status: response.status, contentRange: response.headers['content-range'] };
     } finally { this.downloads--; }
   }

@@ -8,6 +8,7 @@
   var noticeTimer;
   var refreshing = false;
   var hls = null;
+  var playerTimer = null;
   function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (_) { return null; } }
   function save(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
   function notice(text, error) {
@@ -147,24 +148,63 @@
       if (screen !== 'player') return;
       var mediaUrl = session.server + result.url;
       if (window.Hls && window.Hls.isSupported()) {
-        hls = new window.Hls({ enableWorker: true, lowLatencyMode: true, backBufferLength: 30, maxBufferLength: 30, maxMaxBufferLength: 60 });
+        var mediaErrors = 0;
+        hls = new window.Hls({ enableWorker: true, lowLatencyMode: true, backBufferLength: 30, maxBufferLength: 30, maxMaxBufferLength: 60,
+          manifestLoadingMaxRetry: 2, levelLoadingMaxRetry: 2, fragLoadingMaxRetry: 2, fragLoadingRetryDelay: 700, fragLoadingMaxRetryTimeout: 3000 });
         hls.loadSource(mediaUrl); hls.attachMedia($('video'));
-        hls.on(window.Hls.Events.MANIFEST_PARSED, function () { $('video-loading').hidden = true; $('video').play().catch(function () {}); });
+        hls.on(window.Hls.Events.MANIFEST_PARSED, function () {
+          $('video-loading').hidden = true; $('video').play().catch(function () {});
+          playerTimer = setTimeout(function () { if (screen === 'player' && $('video').readyState < 3) showPlaybackError('Le flux répond, mais ses segments vidéo n’arrivent pas. Essayez une autre diffusion.'); }, 18000);
+        });
+        hls.on(window.Hls.Events.FRAG_LOADED, function () { mediaErrors = 0; });
         hls.on(window.Hls.Events.ERROR, function (_event, data) {
-          if (data.fatal) { stopVideo(); $('video-loading').hidden = false; $('video-loading').textContent = 'Ce flux ne peut pas être lu sur cet écran.'; $('player-help').textContent = 'Revenez à l’accueil puis essayez une autre diffusion.'; }
+          console.warn('TV HLS error ' + data.type + ' ' + data.details + ' fatal=' + data.fatal + ' status=' + (data.response && data.response.code || 'none'));
+          if (data.details === 'bufferAddCodecError') {
+            // Some webOS builds expose MSE but cannot decode a source codec through it.
+            // Give the platform's native HLS pipeline one bounded attempt before failing.
+            hls.destroy(); hls = null;
+            playNative(mediaUrl, true);
+            return;
+          }
+          if (data.type === window.Hls.ErrorTypes.NETWORK_ERROR || data.type === window.Hls.ErrorTypes.MEDIA_ERROR) mediaErrors++;
+          if (data.fatal || mediaErrors >= 4) showPlaybackError(data.details === 'fragParsingError'
+            ? 'Le format vidéo de ce flux n’est pas compatible avec ce lecteur. Essayez un autre lien.'
+            : 'La source ne livre pas ses segments vidéo. Revenez au catalogue et essayez un autre lien.');
         });
       } else if ($('video').canPlayType('application/vnd.apple.mpegurl')) {
-        $('video').src = mediaUrl; $('video').addEventListener('loadedmetadata', function ready() { $('video').removeEventListener('loadedmetadata', ready); $('video-loading').hidden = true; }, { once: true }); $('video').load(); $('video').play().catch(function () {});
+        playNative(mediaUrl, false);
       } else { throw new Error('Cet écran ne prend pas en charge la lecture HLS.'); }
     }).catch(function (error) {
       if (screen === 'player') { $('video-loading').hidden = false; $('video-loading').textContent = error.message; $('player-help').textContent = 'Essayez une autre diffusion ou vérifiez le lien enregistré dans la console.'; }
     });
     $('close-player').focus();
   }
+  function showPlaybackError(message) {
+    stopVideo(); $('video-loading').hidden = false; $('video-loading').textContent = message;
+    $('player-help').textContent = 'Le lecteur s’est arrêté après plusieurs tentatives. Revenez au catalogue pour essayer un autre lien.';
+  }
+  function playNative(mediaUrl, fallback) {
+    var video = $('video');
+    clearTimeout(playerTimer);
+    video.src = mediaUrl;
+    video.onloadedmetadata = function () { $('video-loading').hidden = true; };
+    video.onerror = function () {
+      if (screen === 'player') showPlaybackError(fallback
+        ? 'Le format vidéo de ce flux n’est pas pris en charge par la TV. Essayez un autre lien.'
+        : 'Le flux n’a pas pu démarrer sur cet écran. Essayez une autre diffusion.');
+    };
+    playerTimer = setTimeout(function () {
+      if (screen === 'player' && video.readyState < 3) showPlaybackError(fallback
+        ? 'La TV ne peut pas décoder le format de ce flux. Essayez une autre diffusion.'
+        : 'Le flux répond, mais ses segments vidéo n’arrivent pas. Essayez une autre diffusion.');
+    }, 18000);
+    video.load(); video.play().catch(function () {});
+  }
   function stopVideo() {
+    clearTimeout(playerTimer); playerTimer = null;
     if (hls) { hls.destroy(); hls = null; }
     var video = $('video');
-    if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
+    if (video) { video.pause(); video.onerror = null; video.onloadedmetadata = null; video.removeAttribute('src'); video.load(); }
   }
   function goBack() {
     if (screen === 'home') { if (window.webOSSystem && window.webOSSystem.platformBack) window.webOSSystem.platformBack(); return; }

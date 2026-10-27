@@ -22,7 +22,7 @@ export async function publicFetch(input: URL, options: FetchOptions = {}, redire
         res.resume(); resolve({ body: Buffer.alloc(0), url, headers: res.headers, status: res.statusCode! }); return;
       }
       if (res.statusCode !== 200 && res.statusCode !== 206) {
-        res.resume(); reject(new InputError('Flux indisponible ou refusé par sa source.', 502)); return;
+        res.resume(); reject(new InputError(`La source a refusé une requête vidéo (HTTP ${res.statusCode || 502}).`, 502)); return;
       }
       let size = 0; const chunks: Buffer[] = [];
       res.on('data', (chunk: Buffer) => {
