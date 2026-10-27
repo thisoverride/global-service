@@ -5,3 +5,4 @@ dist
 .git
 .DS_Store
 *.log
+.local-tv

@@ -10,6 +10,7 @@ COPY package*.json ./
 RUN npm ci --include=dev
 COPY tsconfig.json ./
 COPY src/ ./src/
+COPY tools/copy-assets.cjs ./tools/copy-assets.cjs
 RUN npm run build
 
 # ─── Stage 2 : image de production ─────────────────────────────────────────
@@ -43,6 +44,7 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /app/build ./build
 COPY public/ ./public/
+COPY tv-app/ ./tv-app/
 
 ENV NODE_ENV=production
 

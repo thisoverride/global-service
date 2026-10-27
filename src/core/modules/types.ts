@@ -25,6 +25,9 @@ export interface ModuleManifest {
 export interface ConsoleModule {
   manifest: ModuleManifest;
   router: Router;
+  // Optional, separately authenticated device API at /devices/<id>.
+  // Must enforce its own scoped credentials; never exposes administration.
+  deviceRouter?: Router;
   migrationsDir?: string;
 }
 

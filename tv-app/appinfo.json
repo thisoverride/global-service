@@ -1,0 +1,14 @@
+{
+  "id": "com.dalency.crackstreams",
+  "version": "1.0.0",
+  "vendor": "Dalency",
+  "type": "web",
+  "main": "index.html",
+  "title": "CrackStreams TV",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "bgColor": "#0c1110",
+  "iconColor": "#bdf46b",
+  "resolution": "1920x1080",
+  "requiredACG": []
+}

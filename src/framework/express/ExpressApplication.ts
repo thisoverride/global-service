@@ -70,18 +70,16 @@ export default class ExpressApplication {
     const publicControllers = [AuthController];
     publicControllers.forEach((ctlClass) => HotSpring.bind(this.app, this.IoCContainer, ctlClass));
 
-    this.app.use(requireAuth);
-
-    const privateControllers = [HomeController];
-    privateControllers.forEach((ctlClass) => HotSpring.bind(this.app, this.IoCContainer, ctlClass));
   }
 
   public async run(port: number): Promise<void> {
     await this._bootstrapDatabase();
     this._configureApp();
-    // Monte chaque module APRES les controleurs du coeur : requireAuth est deja
-    // en place, donc tout module en herite automatiquement.
+    // Each module's administration is guarded by ModuleLoader. Device APIs
+    // have their own scoped authentication, before the fallback session guard.
     await this.moduleLoader.loadAll(this.app, pool, requireAuth);
+    this.app.use(requireAuth);
+    HotSpring.bind(this.app, this.IoCContainer, HomeController);
     configureErrorHandling(this.app);
 
     this.app.listen(port, () => {

@@ -1,0 +1,20 @@
+<section data-module="crackstreams">
+  <h1>CrackStreams TV</h1>
+  <div id="feedback" role="status" aria-live="polite" hidden></div>
+  <div class="card"><div class="card-header"><h2>Configuration</h2><a class="btn btn-secondary" href="/devices/crackstreams/app/" target="_blank" rel="noopener">Aperçu de l’application</a></div><div class="card-body">
+    <form id="stream-settings-form">
+      <div class="form-group"><label for="stream-title">Nom affiché sur la TV</label><input class="form-control" id="stream-title" maxlength="40" required></div>
+      <div class="form-group"><label for="source-url">Adresse du site</label><input class="form-control" id="source-url" type="url" placeholder="https://crackstreams.mx/index" required></div>
+      <p class="muted-note">Si le domaine change, remplacez cette adresse. L’application actualise ses réglages chaque minute et au retour à l’accueil.</p>
+      <div class="row-actions"><button class="btn btn-primary" type="submit">Enregistrer</button><button class="btn btn-secondary" type="button" id="check-source">Tester le site enregistré</button></div>
+    </form>
+    <p class="muted-note">Lecture directe des flux compatibles : aucune page du site, fenêtre publicitaire ou discussion embarquée. Une publicité déjà incluse dans la vidéo ne peut pas être supprimée.</p>
+  </div></div>
+  <div class="card"><div class="card-header"><h2>Association de l’application TV</h2></div><div class="card-body">
+    <ol><li>Installez <strong>CrackStreams TV</strong> sur la télévision.</li><li>Dans l’application, saisissez l’adresse de ce serveur : <code id="server-origin"><%= typeof tvServerUrl !== 'undefined' ? tvServerUrl : '' %></code>.</li><li>Générez un code ci-dessous et saisissez-le sur la TV.</li></ol>
+    <div class="row-actions"><button id="pair-code" type="button" class="btn btn-primary">Créer un code d’association</button><button id="revoke-device" type="button" class="btn btn-secondary">Révoquer l’accès de la TV…</button></div>
+    <div id="pairing-result" hidden><p>Code : <strong><output id="pairing-code"></output></strong></p><p class="muted-note">Valable 5 minutes, une seule utilisation. La nouvelle association remplace l’accès de l’ancien écran.</p></div>
+    <p class="muted-note">La TV dispose uniquement d’un accès à son catalogue et à sa configuration.</p>
+  </div></div>
+</section>
+<script src="<%= asset('/assets/js/tv-modules.js') %>" defer></script>

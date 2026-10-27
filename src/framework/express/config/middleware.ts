@@ -39,6 +39,11 @@ export const configureMiddleware = (app: Application): void => {
   );
   app.use(express.json({ limit: '5mb' }));
   app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+  // Playback tickets are short-lived access capabilities. Never put them in
+  // request logs, which are commonly forwarded to shared log collectors.
+  morgan.token('url', (req) => req.url?.startsWith('/devices/crackstreams/media/') || req.url?.startsWith('/media/')
+    ? '/devices/crackstreams/media/[ticket]'
+    : req.url);
   app.use(morgan('dev'));
 
   // Configuration EJS

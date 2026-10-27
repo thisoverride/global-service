@@ -1,0 +1,19 @@
+<section data-module="tv-messages">
+  <h1>Messages TV</h1>
+  <div id="feedback" role="status" aria-live="polite" hidden></div>
+  <div class="card">
+    <div class="card-header"><h2>Envoyer une notification</h2><span class="badge" id="tv-status">Connexion…</span></div>
+    <div class="card-body">
+      <form id="message-form"><div class="form-group"><label for="message">Message</label><textarea class="form-control" id="message" maxlength="500" rows="4" placeholder="À table, c’est prêt !" required></textarea><p class="muted-note" id="char-count">0 / 500</p></div>
+      <div class="row-actions"><button class="btn btn-primary" type="submit">Envoyer sur la TV</button><button class="btn btn-secondary" type="button" data-message="À table, c’est prêt !">À table</button><button class="btn btn-secondary" type="button" data-message="On part dans 5 minutes.">Départ dans 5 minutes</button><button class="btn btn-secondary" type="button" data-message="Peux-tu baisser le son, s’il te plaît ?">Baisser le son</button></div></form>
+      <p class="muted-note">L’envoi est confirmé par la TV. La durée et la position dépendent de webOS.</p>
+    </div>
+  </div>
+  <div class="card"><div class="card-header"><h2>Télévision</h2></div><div class="card-body">
+    <form id="tv-settings-form"><div class="form-group"><label for="tv-host">Adresse IP de la TV</label><input class="form-control" id="tv-host" placeholder="192.168.1.100" required></div><button type="submit" class="btn btn-primary">Enregistrer</button></form>
+    <p class="muted-note">À la première association, acceptez la demande affichée sur la télévision.</p>
+    <div class="row-actions"><button id="pair-tv" type="button" class="btn btn-secondary">Associer la TV</button><button id="check-tv" type="button" class="btn btn-secondary">Vérifier la connexion</button><button id="reset-tv" type="button" class="btn btn-secondary">Réinitialiser l’association…</button></div>
+  </div></div>
+  <div class="card"><div class="card-header"><h2>Derniers envois</h2></div><div class="table-container"><table><thead><tr><th>Message</th><th>Heure</th></tr></thead><tbody id="history"><tr><td colspan="2">Aucun message envoyé pendant cette session.</td></tr></tbody></table></div><div class="card-body"><p class="muted-note">Les dix derniers messages restent uniquement en mémoire jusqu’au redémarrage.</p></div></div>
+</section>
+<script src="<%= asset('/assets/js/tv-modules.js') %>" defer></script>

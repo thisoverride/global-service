@@ -9,8 +9,10 @@
     "dev": "ts-node-dev --env-file .env ./src/main.ts",
     "compose": "ts-node-dev ./src/main.ts",
     "prod": "node build/main.js",
-    "build": "tsc && cp package.json build/package.json && (cd src && find . \\( -name '*.ejs' -o -name '*.sql' -o -name '*.py' \\) -exec cp --parents {} ../build/ \\;)",
-    "test": "jest"
+    "build": "tsc && node tools/copy-assets.cjs",
+    "test": "npm run build && node --test tests/*.test.cjs",
+    "dev:tv": "npm run build && node tools/dev-tv.cjs",
+    "package:tv": "node tools/package-tv.cjs"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.8",
@@ -25,6 +27,8 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.12",
     "@types/pg": "^8.11.10",
+    "@types/ws": "^8.18.2",
+    "@webos-tools/cli": "^3.2.6",
     "jest": "^29.7.0",
     "playwright": "^1.63.0",
     "ts-node-dev": "^2.0.0",
@@ -33,6 +37,7 @@
   "dependencies": {
     "amqplib": "^2.0.1",
     "bcryptjs": "^2.4.3",
+    "cheerio": "^1.2.0",
     "connect-pg-simple": "^10.0.0",
     "dockerode": "^5.0.1",
     "ejs": "^3.1.10",
@@ -41,9 +46,12 @@
     "express-session": "^1.18.1",
     "fast-xml-parser": "^5.11.0",
     "helmet": "^7.1.0",
+    "hls.js": "^1.6.16",
     "inversify": "^6.0.2",
+    "ipaddr.js": "^2.5.0",
     "morgan": "^1.10.0",
     "pg": "^8.12.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "ws": "^8.22.0"
   }
 }

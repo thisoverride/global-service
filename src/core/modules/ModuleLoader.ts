@@ -91,6 +91,9 @@ export class ModuleLoader {
     }
 
     app.use(consoleModule.manifest.basePath, requireAuth, consoleModule.router);
+    if (consoleModule.deviceRouter) {
+      app.use(`/devices/${consoleModule.manifest.id}`, consoleModule.deviceRouter);
+    }
     this.loaded.push(consoleModule);
     console.info(`🧩 Module chargé : ${consoleModule.manifest.name} (${consoleModule.manifest.basePath})`);
   }
