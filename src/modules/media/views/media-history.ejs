@@ -1,0 +1,61 @@
+<section>
+  <h1>Médiathèque — historique</h1>
+
+  <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+  <% if (problem) { %><div class="alert alert-danger"><%= problem %></div><% } %>
+
+  <div class="card">
+    <div class="card-header"><h2>Archives</h2></div>
+    <% if (!archives.length) { %>
+      <div class="empty-state"><p>Aucun élément archivé pour l'instant.</p></div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Titre</th><th>Bibliothèque</th><th>Taille</th><th>Zip</th><th>État</th><th>Archivé le</th><th>Récupéré le</th></tr></thead>
+          <tbody>
+            <% archives.forEach(function (a) { %>
+              <tr>
+                <td class="cell-break"><%= a.title %><%= a.kind === 'season' ? ' – ' + seasonLabel(a) : (a.year ? ' (' + a.year + ')' : '') %></td>
+                <td><%= a.section %></td>
+                <td><%= formatSize(a.size) %></td>
+                <td><%= formatSize(a.zip_size) %></td>
+                <td><% if (a.status === 'archived') { %><span class="badge badge-success">sur Drive</span><% } else { %><span class="badge">sur le serveur</span><% } %></td>
+                <td><%= formatDate(a.archived_at) %></td>
+                <td><%= formatDate(a.restored_at) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Tâches récentes</h2></div>
+    <% if (!jobs.length) { %>
+      <div class="empty-state"><p>Aucune tâche.</p></div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Action</th><th>Élément</th><th>Résultat</th><th>Demandée le</th><th>Terminée le</th></tr></thead>
+          <tbody>
+            <% jobs.forEach(function (j) { %>
+              <tr>
+                <td><%= j.action === 'archive' ? 'Archivage' : 'Récupération' %></td>
+                <td class="cell-break"><%= j.label %></td>
+                <td class="cell-break">
+                  <% if (j.status === 'done') { %><span class="badge badge-success">terminé</span>
+                  <% } else if (j.status === 'failed') { %><span class="badge badge-danger">échec</span> <%= j.error %>
+                  <% } else { %><span class="badge"><%= j.status === 'running' ? 'en cours' : 'en attente' %></span> <%= j.step %><% } %>
+                </td>
+                <td><%= formatDate(j.created_at) %></td>
+                <td><%= formatDate(j.finished_at) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</section>

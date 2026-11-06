@@ -1,0 +1,182 @@
+<section>
+  <h1>Médiathèque</h1>
+
+  <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+  <% if (problem) { %>
+    <div class="alert alert-danger"><strong>Catalogue indisponible</strong> — <%= problem %></div>
+  <% } else { %>
+
+  <div class="metric-row">
+    <div class="metric">
+      <span class="metric-label">Sur le serveur</span>
+      <span class="metric-value metric-value--text"><%= totals.local.count %> · <%= formatSize(totals.local.size) %></span>
+    </div>
+    <div class="metric">
+      <span class="metric-label">Archivés sur Drive</span>
+      <span class="metric-value metric-value--text"><%= totals.archived.count %> · <%= formatSize(totals.archived.size) %></span>
+    </div>
+    <div class="metric">
+      <span class="metric-label">Fichier introuvable</span>
+      <span class="metric-value <%= totals.missing ? 'metric-value--alert' : '' %>"><%= totals.missing %></span>
+    </div>
+  </div>
+
+  <% if (jobs.length) { %>
+    <div class="card">
+      <div class="card-header"><h2>Tâches</h2></div>
+      <div class="table-container">
+        <table class="media-jobs">
+          <tbody>
+            <% jobs.forEach(function (j) { %>
+              <tr data-job="<%= j.id %>" data-status="<%= j.status %>">
+                <td class="media-job-action"><%= j.action === 'archive' ? 'Archivage' : 'Récupération' %></td>
+                <td class="cell-break"><%= j.label %></td>
+                <td class="media-job-progress">
+                  <% if (j.status === 'failed') { %>
+                    <span class="badge badge-danger">échec</span> <span class="media-job-error"><%= j.error %></span>
+                  <% } else if (j.status === 'done') { %>
+                    <span class="badge badge-success">terminé</span>
+                  <% } else { %>
+                    <div class="media-bar"><div style="width: <%= Math.round(j.progress * 100) %>%"></div></div>
+                    <span class="media-job-step"><%= j.step %> — <%= Math.round(j.progress * 100) %> %</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% } %>
+
+  <form class="media-filters" method="get" action="/modules/media">
+    <input class="form-control" type="search" name="q" value="<%= filters.q %>" placeholder="Rechercher un titre">
+    <select class="form-select" name="section">
+      <option value="">Toutes les bibliothèques</option>
+      <% sections.forEach(function (s) { %>
+        <option value="<%= s %>" <%= filters.section === s ? 'selected' : '' %>><%= s %></option>
+      <% }) %>
+    </select>
+    <select class="form-select" name="state">
+      <option value="">Tous les états</option>
+      <option value="local" <%= filters.state === 'local' ? 'selected' : '' %>>Sur le serveur</option>
+      <option value="archived" <%= filters.state === 'archived' ? 'selected' : '' %>>Archivés</option>
+      <option value="missing" <%= filters.state === 'missing' ? 'selected' : '' %>>Fichier introuvable</option>
+    </select>
+    <select class="form-select" name="sort">
+      <option value="title" <%= filters.sort === 'title' ? 'selected' : '' %>>Titre</option>
+      <option value="size" <%= filters.sort === 'size' ? 'selected' : '' %>>Taille</option>
+      <option value="added" <%= filters.sort === 'added' ? 'selected' : '' %>>Ajout récent</option>
+    </select>
+    <button class="btn btn-primary">Filtrer</button>
+    <a class="btn btn-secondary" href="/modules/media?refresh=1" title="Relire le catalogue Plex">Actualiser</a>
+  </form>
+
+  <% if (!items.length) { %>
+    <div class="empty-state"><p>Aucun élément ne correspond.</p></div>
+  <% } else { %>
+    <p class="muted-note"><%= items.length %> élément<%= items.length > 1 ? 's' : '' %></p>
+    <div class="media-grid">
+      <% items.forEach(function (it) {
+           var name = it.kind === 'season' ? it.title + ' – ' + seasonLabel(it) : it.title;
+           var img = it.thumb ? '/modules/media/poster?thumb=' + encodeURIComponent(it.thumb)
+                   : it.archiveId ? '/modules/media/poster?archive=' + it.archiveId : null; %>
+        <article class="media-card media-card--<%= it.state %>">
+          <div class="media-poster">
+            <% if (img) { %><img src="<%= img %>" alt="" loading="lazy"><% } else { %><span><%= it.title.charAt(0) %></span><% } %>
+          </div>
+          <div class="media-info">
+            <h3 class="media-title" title="<%= name %>"><%= it.title %></h3>
+            <p class="media-sub">
+              <%= it.kind === 'season' ? seasonLabel(it) + (it.episodes ? ' · ' + it.episodes + ' ép.' : '') : (it.year || '') %>
+              · <%= it.section %>
+            </p>
+            <p class="media-sub">
+              <% if (it.state === 'archived') { %>
+                <span class="badge badge-success">sur Drive</span> <%= formatSize(it.zipSize) %>
+              <% } else if (it.state === 'missing') { %>
+                <span class="badge badge-danger">introuvable</span>
+              <% } else { %>
+                <%= formatSize(it.size) %>
+              <% } %>
+            </p>
+            <% if (it.job) { %>
+              <button class="btn btn-secondary media-action" disabled>
+                <%= it.job.status === 'running' ? 'En cours…' : 'En attente…' %>
+              </button>
+            <% } else if (it.state === 'local') { %>
+              <form method="post" action="/modules/media/archive"
+                    onsubmit="return confirm(<%= JSON.stringify('« ' + name + ' » sera envoyé sur Drive, puis supprimé du serveur une fois l\'envoi vérifié (' + formatSize(it.size) + ' libérés). Continuer ?') %>)">
+                <input type="hidden" name="key" value="<%= it.key %>">
+                <input type="hidden" name="title" value="<%= name %>">
+                <input type="hidden" name="filters" value="<%= queryString %>">
+                <button class="btn btn-secondary media-action">Archiver</button>
+              </form>
+            <% } else if (it.state === 'archived') { %>
+              <form method="post" action="/modules/media/restore">
+                <input type="hidden" name="id" value="<%= it.archiveId %>">
+                <input type="hidden" name="title" value="<%= name %>">
+                <input type="hidden" name="filters" value="<%= queryString %>">
+                <button class="btn btn-primary media-action">Récupérer</button>
+              </form>
+            <% } else { %>
+              <button class="btn btn-secondary media-action" disabled title="Le fichier n'est pas accessible : disque ou baie hors ligne ?">Indisponible</button>
+            <% } %>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+  <% } %>
+</section>
+
+<style>
+  .media-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 8px; align-items: center; }
+  .media-filters .form-control { flex: 1 1 220px; max-width: 320px; }
+  .media-filters .form-select { flex: 0 1 200px; }
+  .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  .media-card { background: #fff; border: 1px solid var(--border-color); box-shadow: var(--shadow); display: flex; flex-direction: column; min-width: 0; }
+  .media-card--missing { opacity: .6; }
+  .media-poster { aspect-ratio: 2 / 3; background: var(--aws-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .media-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .media-poster span { color: #fff; font-size: 40px; opacity: .5; }
+  .media-card--archived .media-poster img { filter: grayscale(.85); }
+  .media-info { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .media-title { font-size: 13px; font-weight: 600; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .media-sub { font-size: 12px; color: var(--text-light); margin: 0; }
+  .media-info form { margin-top: auto; }
+  .media-action { width: 100%; margin-top: 6px; }
+  .media-bar { height: 6px; background: var(--bg-light); border: 1px solid var(--border-color); width: 100%; max-width: 280px; }
+  .media-bar > div { height: 100%; background: var(--aws-orange); transition: width .6s; }
+  .media-job-progress { min-width: 220px; }
+  .media-job-step, .media-job-error { font-size: 12px; color: var(--text-light); }
+  .media-job-action { white-space: nowrap; width: 1%; }
+</style>
+
+<% if (jobs.some(function (j) { return j.status === 'queued' || j.status === 'running'; })) { %>
+<script>
+  (function () {
+    // Suit l'avancement sans recharger ; recharge une fois une tache finie
+    // pour mettre a jour la grille.
+    function tick() {
+      fetch('/modules/media/jobs.json').then(function (r) { return r.json(); }).then(function (jobs) {
+        var reload = false;
+        jobs.forEach(function (j) {
+          var row = document.querySelector('tr[data-job="' + j.id + '"]');
+          if (!row) return;
+          var was = row.getAttribute('data-status');
+          if ((was === 'queued' || was === 'running') && (j.status === 'done' || j.status === 'failed')) reload = true;
+          var bar = row.querySelector('.media-bar > div');
+          var step = row.querySelector('.media-job-step');
+          var pct = Math.round(j.progress * 100);
+          if (bar) bar.style.width = pct + '%';
+          if (step) step.textContent = j.step + ' — ' + pct + ' %';
+        });
+        if (reload) location.reload();
+      }).catch(function () {});
+    }
+    setInterval(tick, 3000);
+  })();
+</script>
+<% } %>
