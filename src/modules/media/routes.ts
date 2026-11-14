@@ -1,5 +1,19 @@
 import { Router } from "express";
-import { Catalog, Job, MediaItem, VaultError, archive, getArchives, getCatalog, getJobs, poster, restore } from "./client";
+import {
+  Catalog,
+  Job,
+  MediaItem,
+  PlexStatus,
+  VaultError,
+  archive,
+  getArchives,
+  getCatalog,
+  getJobs,
+  getPlexStatus,
+  poster,
+  restore,
+  updatePlex,
+} from "./client";
 
 function message(error: unknown): string {
   return error instanceof Error ? error.message : "Erreur inconnue.";
@@ -93,12 +107,17 @@ export function buildRouter(): Router {
       let catalog: Catalog | null = null;
       let jobs: Job[] = [];
       let problem: string | null = null;
+      const fresh = req.query.refresh === "1";
+      // Plex redemarre pendant sa mise a jour : le bandeau Plex reste affiche
+      // meme quand le catalogue ne peut pas etre lu.
+      const plexStatus = getPlexStatus(fresh).catch((): PlexStatus | null => null);
       try {
-        [catalog, jobs] = await Promise.all([getCatalog(req.query.refresh === "1"), getJobs()]);
+        [catalog, jobs] = await Promise.all([getCatalog(fresh), getJobs()]);
       } catch (error) {
         if (!(error instanceof VaultError)) throw error;
         problem = error.message;
       }
+      const plex = await plexStatus;
       const { items, filters } = catalog ? filterItems(catalog, req.query) : { items: [], filters: {} };
       const dayAgo = Date.now() - 24 * 3600 * 1000;
       const recentJobs = jobs.filter(
@@ -106,6 +125,7 @@ export function buildRouter(): Router {
       );
       res.render("media-index", {
         problem,
+        plex,
         sections: catalog ? [...new Set(catalog.items.map((i) => i.section))].sort((a, b) => a.localeCompare(b, "fr")) : [],
         items,
         filters,
@@ -126,6 +146,24 @@ export function buildRouter(): Router {
       res.json(await getJobs());
     } catch (error) {
       res.status(502).json({ error: message(error) });
+    }
+  });
+
+  router.get("/plex.json", async (_req, res) => {
+    try {
+      res.setHeader("Cache-Control", "no-store");
+      res.json(await getPlexStatus());
+    } catch (error) {
+      res.status(502).json({ error: message(error) });
+    }
+  });
+
+  router.post("/plex-update", async (req, res) => {
+    try {
+      await updatePlex();
+      back(res, req.body.filters, "message", "Mise à jour de Plex lancée : Plex redémarre dans quelques instants.");
+    } catch (error) {
+      back(res, req.body.filters, "error", message(error));
     }
   });
 

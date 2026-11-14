@@ -60,6 +60,18 @@ export interface ArchiveRecord {
   restored_at: string | null;
 }
 
+// Mise a jour de Plex : le service depose une demande que l'hote execute en
+// root (unite systemd plex-update.path), puis relit son journal.
+export interface PlexStatus {
+  installed: string | null;
+  latest: string | null;
+  updateAvailable: boolean;
+  state: "idle" | "pending" | "stalled" | "running" | "done" | "failed";
+  since: string | null;
+  error: string | null;
+  log: string;
+}
+
 export class VaultError extends Error {}
 
 function token(): string {
@@ -93,6 +105,8 @@ export const getCatalog = (fresh = false) => call<Catalog>(`/catalog${fresh ? "?
 export const getJobs = () => call<Job[]>("/jobs");
 export const getArchives = () => call<ArchiveRecord[]>("/archives");
 export const archive = (key: string) => call<{ job: number }>("/archive", { method: "POST", body: JSON.stringify({ key }) });
+export const getPlexStatus = (fresh = false) => call<PlexStatus>(`/plex${fresh ? "?fresh=1" : ""}`);
+export const updatePlex = () => call<PlexStatus>("/plex/update", { method: "POST" });
 export const restore = (id: number) => call<{ job: number }>("/restore", { method: "POST", body: JSON.stringify({ id }) });
 
 export async function poster(path: string): Promise<Response> {

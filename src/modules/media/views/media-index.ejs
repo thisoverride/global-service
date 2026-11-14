@@ -3,6 +3,46 @@
 
   <% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <% if (plex) {
+       var plexActive = plex.state === 'pending' || plex.state === 'running';
+       var plexRecent = plex.since && Date.now() - Date.parse(plex.since) < 24 * 3600 * 1000; %>
+    <div class="card plex-update" data-state="<%= plex.state %>">
+      <div class="plex-update-info">
+        <strong>Plex Media Server</strong>
+        <span class="plex-version"><%= plex.installed || (plexActive ? 'redémarrage…' : 'version inconnue') %></span>
+        <% if (plexActive) { %>
+          <span class="badge plex-badge-new">mise à jour en cours…</span>
+        <% } else if (plex.updateAvailable) { %>
+          <span class="badge plex-badge-new">version <%= plex.latest %> disponible</span>
+        <% } else if (plex.installed && plex.latest) { %>
+          <span class="badge badge-success">à jour</span>
+        <% } %>
+        <% if (plex.state === 'done' && plexRecent) { %>
+          <span class="plex-note">mis à jour le <%= formatDate(plex.since) %></span>
+        <% } %>
+      </div>
+      <% if (plexActive) { %>
+        <span class="plex-note plex-step"><%= plex.state === 'pending' ? 'Demande envoyée au serveur…' : 'Téléchargement et installation…' %></span>
+      <% } else if (plex.updateAvailable && plex.state !== 'stalled') { %>
+        <form method="post" action="/modules/media/plex-update"
+              onsubmit="return confirm(<%= JSON.stringify('Installer Plex ' + plex.latest + ' ? Plex redémarre pendant environ une minute : les lectures en cours seront coupées.') %>)">
+          <input type="hidden" name="filters" value="<%= queryString %>">
+          <button class="btn btn-primary">Mettre à jour</button>
+        </form>
+      <% } %>
+      <% if (plex.state === 'stalled') { %>
+        <p class="plex-problem">La demande de mise à jour n'a pas été prise en charge : l'unité <code>plex-update.path</code> n'est pas active sur le serveur (voir le README de l'archiveur).</p>
+      <% } else if (plex.state === 'failed' && plexRecent) { %>
+        <details class="plex-problem">
+          <summary>La dernière mise à jour a échoué (<%= formatDate(plex.since) %>) — voir le journal</summary>
+          <pre><%= plex.log || 'Journal vide.' %></pre>
+        </details>
+      <% } else if (plex.error && !plexActive) { %>
+        <p class="plex-problem"><%= plex.error %></p>
+      <% } %>
+    </div>
+  <% } %>
   <% if (problem) { %>
     <div class="alert alert-danger"><strong>Catalogue indisponible</strong> — <%= problem %></div>
   <% } else { %>
@@ -152,7 +192,34 @@
   .media-job-progress { min-width: 220px; }
   .media-job-step, .media-job-error { font-size: 12px; color: var(--text-light); }
   .media-job-action { white-space: nowrap; width: 1%; }
+  .plex-update { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 10px 14px; }
+  .plex-update-info { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
+  .plex-version { font-family: monospace; font-size: 13px; color: var(--text-light); overflow-wrap: anywhere; }
+  .plex-badge-new { background: #fff3e0; color: #b25e00; }
+  .plex-note { font-size: 12px; color: var(--text-light); }
+  .plex-update form { margin: 0; }
+  .plex-problem { flex-basis: 100%; margin: 0; font-size: 13px; color: #a3272a; }
+  .plex-problem pre { white-space: pre-wrap; font-size: 12px; color: var(--text-color, #333); background: var(--bg-light); padding: 8px; margin: 6px 0 0; max-height: 240px; overflow: auto; }
 </style>
+
+<% if (plex && (plex.state === 'pending' || plex.state === 'running')) { %>
+<script>
+  (function () {
+    // Suit la mise a jour de Plex ; recharge une fois l'installation finie.
+    var timer = setInterval(function () {
+      fetch('/modules/media/plex.json').then(function (r) { return r.json(); }).then(function (s) {
+        if (s.state === 'pending' || s.state === 'running') {
+          var step = document.querySelector('.plex-step');
+          if (step) step.textContent = s.state === 'pending' ? 'Demande envoyée au serveur…' : 'Téléchargement et installation…';
+          return;
+        }
+        clearInterval(timer);
+        location.reload();
+      }).catch(function () {});
+    }, 3000);
+  })();
+</script>
+<% } %>
 
 <% if (jobs.some(function (j) { return j.status === 'queued' || j.status === 'running'; })) { %>
 <script>
